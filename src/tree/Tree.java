@@ -3,8 +3,8 @@ package tree;
 import java.util.LinkedList;
 
 /**
- *
- * @author Erika
+ * A simple Tree structure
+ * @author ErisoHV
  */
 public class Tree<T> {
     private T content;
@@ -98,14 +98,14 @@ public class Tree<T> {
     }
     
     /**
-     * Given the task content, return it type (And/Or)
-     * @param contentNode Node content
-     * @return Type and / or
+     * Return a node given the node content
+     * @param nodeContent Node content
+     * @return A Node
      */
-    public Tree getNode(T contentNode) {
-        Tree aux;
+    public Tree getNode(T nodeContent) {
+        Tree aux = null;
         Tree node = null;
-        if (content.equals(contentNode)) {
+        if (content.equals(nodeContent)) {
             return this;
         } else {
             if (leftChild != null) {
@@ -124,7 +124,7 @@ public class Tree<T> {
      * @param nodeList node content list
      */
     public void preorder(LinkedList<T> nodeList) {
-        Tree aux;
+        Tree aux = null;
         nodeList.addLast(content);
         if (leftChild != null) {
             aux = leftChild;
@@ -140,7 +140,7 @@ public class Tree<T> {
      * @param nodeList node content list
      */
     public void inorder(LinkedList<T> nodeList) {		//Recorrido inorder del Arbol
-        Tree aux;
+        Tree aux = null;
         if (leftChild != null) {
             aux = leftChild;
             aux.inorder(nodeList);
@@ -160,7 +160,7 @@ public class Tree<T> {
      * @param nodeList node content list
      */
     public void postorder(LinkedList<T>  nodeList) {		//Recorrido prostorden del Arbol
-        Tree aux;
+        Tree aux = null;
         if (leftChild != null) {
             aux = leftChild;
             while (aux != null) {
@@ -190,6 +190,31 @@ public class Tree<T> {
         }
         return cont;
     }
+    
+    /**
+     * Return a true if the node is a Leaf
+     * @param nodeContent Node content to compare
+     * @return True if is a Leaf
+     */
+    public boolean isLeaf(T nodeContent) {
+        Tree aux = null;
+        boolean val = false;
+        if (getLeftChild() != null) {
+            aux = leftChild;
+            val = false;
+            while ((val == false) && (aux != null)) {
+                val = aux.isLeaf(nodeContent);
+                aux = aux.getRightChild();
+            }
+            return val;
+        } else {
+            if (getContent().equals(nodeContent)) {
+                return true;
+            }
+        }
+        return val;
+    }
+
 
 
 }

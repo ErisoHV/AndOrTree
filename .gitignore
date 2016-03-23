@@ -1,0 +1,7 @@
+/dist/
+/build/
+/javadoc-img/
+/nbproject/
+/test/
+*.xml
+.mf
