@@ -1,43 +1,41 @@
 package andortree;
-/**
- * @author ErisoHV
- * @version 1.0
- */
-import java.util.LinkedList;
 
-public class AndOrTree{
-    private String taskName;
+import java.util.LinkedList;
+import tree.Tree;
+/**
+ * ADN-OR tree is an n-ary tree used to represent knowledge about 
+ * groups of tasks to be executed to achieve some goal.<br/>
+ * AND-OR tree has two types of nodes: the AND nodes and OR nodes.<br/>
+ * The tasks that are not composed of subtasks are known as atomic tasks.<br/>
+ * An atomic task can be in two states: executed or unexecuted. Meanwhile, 
+ * the status of a non-atomic task depends on the state of their children: 
+ * if it is an AND node is executed if all child nodes are executed.
+ * OR node is executed if at least one of their children has been done.
+ * @author ErisoHV
+ */
+public class AndOrTree extends Tree{
+    
     private boolean andTask;
     private boolean orTask;
-    private boolean isEjecuted;
-    private AndOrTree leftChild;
-    private AndOrTree rightChild;
+    private boolean isExecuted;
 
     /**
      * Empty constructor
      */
-    public AndOrTree() {
+    public AndOrTree(){
+        super (null, null, null);
         andTask = false;
         orTask = false;
-        isEjecuted = false;
-        leftChild = null;
-        rightChild = null;
+        isExecuted = false;
     }
 
     /**
      * 
      * @return True if the AndOrTree is empty
      */
+    @Override
     public boolean isEmpty() {		       
         return !andTask && !orTask;
-    }
-
-    /**
-     * 
-     * @return 
-     */
-    public String getTaskName() {
-        return taskName;
     }
     
     /**
@@ -61,56 +59,7 @@ public class AndOrTree{
      * @return True if the AndOrTree node is <strong>already executed</strong>
      */
     public boolean isExecuted() {
-        return isEjecuted;
-    }
-
-    /**
-     * 
-     * @return the left child of the AndOrTree
-     */
-    public AndOrTree getLeftChild() {		//Retorna el hijo izquierdo de una taskName
-        return leftChild;
-    }
-
-    /**
-     * 
-     * @return the right child of the AndOrTree
-     */
-    public AndOrTree getRightChild() {		//Retorna el hijo derecho de una taskName
-        return rightChild;
-    }
-    
-    /**
-     * Set the left child of the AndOrTree
-     * @param tree 
-     */
-    public void setLeftChild(AndOrTree tree) {		//Modifica el hijo izq de una taskName
-        leftChild = tree;
-    }
-
-    /**
-     * Set the right child of the AndOrTree
-     * @param tree 
-     */
-    public void setRightChild(AndOrTree tree) {       //Modifica el hijo derech de una taskName
-        rightChild = tree;
-    }
-
-    /**
-     * 
-     * @return return all the children of the AndOrTree
-     */
-    public LinkedList<AndOrTree> getChildren() {
-        LinkedList<AndOrTree> laux = new LinkedList<>();
-        AndOrTree arb;
-        if (leftChild != null) {
-            arb = leftChild;
-            while (arb != null) {
-                laux.addLast(arb);
-                arb = arb.getRightChild();
-            }
-        }
-        return laux;
+        return isExecuted;
     }
 
     /**
@@ -119,15 +68,15 @@ public class AndOrTree{
      */
     public void changeToAndTask(String taskname) {		//Dado el nombre de una taskName, se busca y se cambia a and
         AndOrTree aux;
-        if (taskName.equals(taskname)) {
+        if (getContent().equals(taskname)) {
             andTask = true;
             orTask = false;
         }
-        if (leftChild != null) {
-            aux = leftChild;
+        if (getLeftChild() != null) {
+            aux = (AndOrTree) getLeftChild();
             while (aux != null) {
                 aux.changeToAndTask(taskname);
-                aux = aux.getRightChild();
+                aux = (AndOrTree) aux.getRightChild();
             }
         }
 
@@ -137,18 +86,17 @@ public class AndOrTree{
      * Change a AndOrTree node type to Or given the task name
      * @param taskname The name of the task to change to Or
      */
-    public void changeToOrTask(String taskname) {		//Dado el nombre de una taskName, se busca y se cambia a or
-        int cont = 0;
+    public void changeToOrTask(Object taskname) {
         AndOrTree aux;
-        if (taskName.equals(taskname)) {
+        if (getContent().toString().equals(taskname)) {
             andTask = false;
             orTask = true;
         }
-        if (leftChild != null) {
-            aux = leftChild;
+        if (getLeftChild() != null) {
+            aux = (AndOrTree) getLeftChild();
             while (aux != null) {
                 aux.changeToOrTask(taskname);
-                aux = aux.getRightChild();
+                aux = (AndOrTree) aux.getRightChild();
             }
         }
 
@@ -158,16 +106,16 @@ public class AndOrTree{
      * Execute a AndOrTree node given the task name
      * @param taskname the name of the task to be executed
      */
-    public void executeTask(String taskname) {
+    public void executeTask(Object taskname) {
         AndOrTree aux;
-        if (taskName.equals(taskname)) {
-            isEjecuted = true;
+        if (getContent().toString().equals(taskname)) {
+            isExecuted = true;
         }
-        if (leftChild != null) {
-            aux = leftChild;
+        if (getLeftChild() != null) {
+            aux = (AndOrTree) getLeftChild();
             while (aux != null) {
                 aux.executeTask(taskname);
-                aux = aux.getRightChild();
+                aux = (AndOrTree) aux.getRightChild();
             }
         }
     }
@@ -184,18 +132,18 @@ public class AndOrTree{
         AndOrTree aux;
         AndOrTree inic;
         LinkedList<AndOrTree> laux = new LinkedList<>();
-        taskName = new String();
+        setContent(new String());
         treeStructure.remove();
         b = treeStructure.getFirst();
         treeStructure.remove();
         while ((!b.equals(",")) && (!b.equals(")"))) {
-            taskName = taskName + b;
+            setContent(getContent() + b);
             b = treeStructure.getFirst();
             treeStructure.remove();
         }
         andTask = false;
         orTask = false;
-        isEjecuted = false;
+        isExecuted = false;
         if (b.equals(",")) {
             while (!b.equals(")")) {
                 aux = new AndOrTree();
@@ -206,13 +154,13 @@ public class AndOrTree{
             }
             inic = laux.getFirst();
             laux.removeFirst();
-            leftChild = inic;
-            aux = leftChild;
+            setLeftChild(inic);
+            aux = (AndOrTree) getLeftChild();
             while (laux.size() > 0) {
                 inic = laux.getFirst();
                 laux.removeFirst();
                 aux.setRightChild(inic);
-                aux = aux.getRightChild();
+                aux = (AndOrTree) aux.getRightChild();
             }
         }
     }
@@ -225,18 +173,18 @@ public class AndOrTree{
     public String getTaskType(String taskname) {
         AndOrTree aux;
         String tipo = "";
-        if (taskName.equals(taskname)) {
+        if (getContent().toString().equals(taskname)) {
             if (andTask) {
                 return "and";
             } else {
                 return "or";
             }
         } else {
-            if (leftChild != null) {
-                aux = leftChild;
+            if (getLeftChild() != null) {
+                aux = (AndOrTree) getLeftChild();
                 while ((aux != null) && tipo.equals(" ")) {
                     tipo = aux.getTaskType(taskname);
-                    aux = aux.getRightChild();
+                    aux = (AndOrTree) aux.getRightChild();
                 }
             }
             return tipo;
@@ -252,14 +200,14 @@ public class AndOrTree{
     public boolean isExecuted(String taskname) {
         AndOrTree aux;
         boolean e = false;
-        if (taskName.equals(taskname)) {
-            return isEjecuted;
+        if (getContent().toString().equals(taskname)) {
+            return isExecuted;
         } else {
-            if (leftChild != null) {
-                aux = leftChild;
+            if (getLeftChild() != null) {
+                aux = (AndOrTree) getLeftChild();
                 while ((aux != null)) {
                     e = aux.isExecuted(taskname);
-                    aux = aux.getRightChild();
+                    aux = (AndOrTree) aux.getRightChild();
                 }
             }
             return e;
@@ -274,72 +222,20 @@ public class AndOrTree{
     public boolean isAtomic(Object taskname) {
         AndOrTree aux;
         boolean val;
-        if (leftChild != null) {
-            aux = leftChild;
+        if (getLeftChild() != null) {
+            aux = (AndOrTree) getLeftChild();
             val = false;
             while ((val == false) && (aux != null)) {
                 val = aux.isAtomic(taskname);
-                aux = aux.getRightChild();
+                aux = (AndOrTree) aux.getRightChild();
             }
             return val;
         } else {
-            if (taskName.equals(taskname)) {
+            if (getContent().toString().equals(taskname)) {
                 return true;
             }
         }
         return false;
-    }
-
-    /**
-     * Preorder route
-     * @param nodeList node name list
-     */
-    public void preorder(LinkedList<String> nodeList) {
-        AndOrTree aux;
-        nodeList.addLast(taskName);
-        if (leftChild != null) {
-            aux = leftChild;
-            while (aux != null) {
-                aux.preorder(nodeList);
-                aux = aux.getRightChild();
-            }
-        }
-    }
-    
-   /**
-     * Inorder route
-     * @param nodeList node name list
-     */
-    public void inorder(LinkedList<String> nodeList) {		//Recorrido inorder del Arbol
-        AndOrTree aux;
-        if (leftChild != null) {
-            aux = leftChild;
-            aux.inorder(nodeList);
-            aux = aux.getRightChild();
-            nodeList.addLast(taskName);
-            while (aux != null) {
-                aux.inorder(nodeList);
-                aux = aux.getRightChild();
-            }
-        } else {
-            nodeList.addLast(taskName);
-        }
-    }
-
-    /**
-     * Postorder route
-     * @param nodeList node name list
-     */
-    public void postorder(LinkedList<String>  nodeList) {		//Recorrido prostorden del Arbol
-        AndOrTree aux;
-        if (leftChild != null) {
-            aux = leftChild;
-            while (aux != null) {
-                aux.postorder(nodeList);
-                aux = aux.getRightChild();
-            }
-        }
-        nodeList.addLast(taskName);
     }
 
     /**
@@ -349,13 +245,13 @@ public class AndOrTree{
     public int getAtomicCount() {		//Cuenta las tareas Atomica ejecutadas
         int cont = 0;
         AndOrTree aux;
-        if (leftChild != null) {
-            aux = leftChild;
+        if (getLeftChild() != null) {
+            aux = (AndOrTree) getLeftChild();
             while (aux != null) {
                 cont = cont + aux.getAtomicCount();
-                aux = aux.getRightChild();
+                aux = (AndOrTree) aux.getRightChild();
             }
-        } else if (isEjecuted) {
+        } else if (isExecuted) {
             cont = 1;
         }
         return cont;
@@ -370,30 +266,30 @@ public class AndOrTree{
     public boolean doAtomicTask(String taskname) {	//ejecuta una taskName Atomica
         AndOrTree aux;
         boolean val;
-        if (leftChild != null) {
-            aux = leftChild;
+        if (getLeftChild() != null) {
+            aux = (AndOrTree) getLeftChild();
             if (andTask) {
                 val = true;
                 while (aux != null) {
                     val = aux.doAtomicTask(taskname) && val;
-                    aux = aux.getRightChild();
+                    aux = (AndOrTree) aux.getRightChild();
                 }
-                isEjecuted = val;
+                isExecuted = val;
             } else {
                 val = false;
                 while (aux != null) {
                     val = aux.doAtomicTask(taskname) || val;
-                    aux = aux.getRightChild();
+                    aux = (AndOrTree) aux.getRightChild();
                 }
-                isEjecuted = val;
+                isExecuted = val;
             }
         } else {
-            if (taskName.equals(taskname)) {
-                isEjecuted = true;
+            if (getContent().toString().equals(taskname)) {
+                isExecuted = true;
             }
 
         }
-        return isEjecuted;
+        return isExecuted;
     }
 
     /**
@@ -405,29 +301,29 @@ public class AndOrTree{
     public boolean undoAtomicTask(Object taskname) {	   //deshace una taskName Atomica isExecuted
         AndOrTree aux;
         boolean val;
-        if (leftChild != null) {
-            aux = leftChild;
+        if (getLeftChild() != null) {
+            aux = (AndOrTree) getLeftChild();
             if (andTask) {
                 val = true;
                 while (aux != null) {
                     val = aux.undoAtomicTask(taskname) && val;
-                    aux = aux.getRightChild();
+                    aux = (AndOrTree) aux.getRightChild();
                 }
-                isEjecuted = val;
+                isExecuted = val;
             } else {
                 val = false;
                 while (aux != null) {
                     val = aux.undoAtomicTask(taskname) || val;
-                    aux = aux.getRightChild();
+                    aux = (AndOrTree) aux.getRightChild();
                 }
-                isEjecuted = val;
+                isExecuted = val;
             }
         } else {
-            if (taskName.equals(taskname)) {
-                isEjecuted = false;
+            if (getContent().toString().equals(taskname)) {
+                isExecuted = false;
             }
         }
-        return isEjecuted;
+        return isExecuted;
     }
     
     /**
@@ -440,14 +336,14 @@ public class AndOrTree{
     public int getAtomicMinimun() {		//Cuenta la cantidad de tareas Atomicas que faltan para que se ejecute la raiz
         int cont1 = 0, cont2 = 0;
         AndOrTree aux;
-        aux = leftChild;
+        aux = (AndOrTree) getLeftChild();
         if (andTask || orTask) {
-            if (!isEjecuted) {
+            if (!isExecuted) {
                 if (aux != null) {
                     if (andTask) {
                         while (aux != null) {
                             cont1 = cont1 + aux.getAtomicMinimun();
-                            aux = aux.getRightChild();
+                            aux = (AndOrTree) aux.getRightChild();
                         }
                     } else {
                         cont1 = 5000;
@@ -456,7 +352,7 @@ public class AndOrTree{
                             if (cont1 > cont2) {
                                 cont1 = cont2;
                             }
-                            aux = aux.getRightChild();
+                            aux = (AndOrTree) aux.getRightChild();
                         }
                     }
                 } else {
@@ -466,5 +362,5 @@ public class AndOrTree{
         }
         return cont1;
     }
-
+    
 }

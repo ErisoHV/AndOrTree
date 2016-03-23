@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package tree;
 
 import java.util.LinkedList;
@@ -12,16 +6,19 @@ import java.util.LinkedList;
  *
  * @author Erika
  */
-public class Tree {
-    private String name;
+public class Tree<T> {
+    private T content;
     private Tree leftChild;
     private Tree rightChild;
     
     /**
      * Empty constructor
+     * @param contentNode content of the node
+     * @param leftChild left child of the node
+     * @param rightChild right child of the node
      */
-    public Tree(String name, Tree leftChild, Tree rightChild) {
-        this.name = name;
+    public Tree(T contentNode, Tree leftChild, Tree rightChild) {
+        this.content = contentNode;
         this.leftChild = leftChild;
         this.rightChild = rightChild;
     }
@@ -36,10 +33,19 @@ public class Tree {
     
     /**
      * 
-     * @return the node name
+     * @return the node content
      */
-    public String getName() {
-        return name;
+    public T getContent() {
+        return content;
+    }
+    
+    /**
+     * 
+     * 
+     * @param name
+     */
+    public void setContent(T name) {
+        this.content = name;
     }
     
     /**
@@ -92,14 +98,14 @@ public class Tree {
     }
     
     /**
-     * Given the task name, return it type (And/Or)
-     * @param taskname Task name
+     * Given the task content, return it type (And/Or)
+     * @param contentNode Node content
      * @return Type and / or
      */
-    public Tree getNode(String nodename) {
+    public Tree getNode(T contentNode) {
         Tree aux;
         Tree node = null;
-        if (name.equals(nodename)) {
+        if (content.equals(contentNode)) {
             return this;
         } else {
             if (leftChild != null) {
@@ -115,11 +121,11 @@ public class Tree {
     
     /**
      * Preorder route
-     * @param nodeList node name list
+     * @param nodeList node content list
      */
-    public void preorder(LinkedList<String> nodeList) {
+    public void preorder(LinkedList<T> nodeList) {
         Tree aux;
-        nodeList.addLast(name);
+        nodeList.addLast(content);
         if (leftChild != null) {
             aux = leftChild;
             while (aux != null) {
@@ -131,29 +137,29 @@ public class Tree {
     
    /**
      * Inorder route
-     * @param nodeList node name list
+     * @param nodeList node content list
      */
-    public void inorder(LinkedList<String> nodeList) {		//Recorrido inorder del Arbol
+    public void inorder(LinkedList<T> nodeList) {		//Recorrido inorder del Arbol
         Tree aux;
         if (leftChild != null) {
             aux = leftChild;
             aux.inorder(nodeList);
             aux = aux.getRightChild();
-            nodeList.addLast(name);
+            nodeList.addLast(content);
             while (aux != null) {
                 aux.inorder(nodeList);
                 aux = aux.getRightChild();
             }
         } else {
-            nodeList.addLast(name);
+            nodeList.addLast(content);
         }
     }
 
     /**
      * Postorder route
-     * @param nodeList node name list
+     * @param nodeList node content list
      */
-    public void postorder(LinkedList<String>  nodeList) {		//Recorrido prostorden del Arbol
+    public void postorder(LinkedList<T>  nodeList) {		//Recorrido prostorden del Arbol
         Tree aux;
         if (leftChild != null) {
             aux = leftChild;
@@ -162,15 +168,15 @@ public class Tree {
                 aux = aux.getRightChild();
             }
         }
-        nodeList.addLast(name);
+        nodeList.addLast(content);
     }
     
     
     /**
-     * Get the count of the atomic task in the tree
-     * @return atomic task count
+     * Get the count of the nodes in the tree
+     * @return nodes count
      */
-    public int getLeafCount() {		//Cuenta las tareas Atomica ejecutadas
+    public int getLeafCount() {
         int cont = 0;
         Tree aux;
         if (leftChild != null) {

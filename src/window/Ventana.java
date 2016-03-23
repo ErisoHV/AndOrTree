@@ -138,7 +138,8 @@ public class Ventana extends JFrame { //Inicio class Ventana
 
         public void actionPerformed(ActionEvent ae) {
             if (!arbol.isEmpty()) {    //Ejecuta una tarea Atomica dada
-                Object tarea = new Object();
+                String tarea;
+                tarea = new String();
                 JOptionPane cuadro_dialogo = new JOptionPane();
                 tarea
                         = cuadro_dialogo.showInputDialog("Introduzca el identificador de la tarea que desea realizar: ");
@@ -212,23 +213,23 @@ public class Ventana extends JFrame { //Inicio class Ventana
                 if (!(nombre == null)) {
                     try {
                         FileWriter fw = new FileWriter(nombre);
-                        BufferedWriter salida = new BufferedWriter(new BufferedWriter(fw));
-                        LinkedList<String> list = new LinkedList<String>();
-                        int i = 0;
-                        arbol.preorder(list);
-                        while (i < list.size()) {
-                            salida.write(list.get(i));
-                            salida.write(" ");
-                            i++;
+                        try (BufferedWriter salida = new BufferedWriter(new BufferedWriter(fw))) {
+                            LinkedList<String> list = new LinkedList<>();
+                            int i = 0;
+                            arbol.preorder(list);
+                            while (i < list.size()) {
+                                salida.write(list.get(i));
+                                salida.write(" ");
+                                i++;
+                            }
+                            salida.write("\n");
+                            i = 0;
+                            while (i < list.size()) {
+                                salida.write(list.get(i) + " " + arbol.getTaskType(list.get(i))
+                                        + " " + arbol.isExecuted(list.get(i)) + "\n");
+                                i++;
+                            }
                         }
-                        salida.write("\n");
-                        i = 0;
-                        while (i < list.size()) {
-                            salida.write(list.get(i) + " " + arbol.getTaskType(list.get(i))
-                                    + " " + arbol.isExecuted(list.get(i)) + "\n");
-                            i++;
-                        }
-                        salida.close();
                     } catch (IOException ioException) {	//Mensaje de Error
                         JOptionPane.showMessageDialog(null, "No se pudo crear el archivo",
                                 "Error", JOptionPane.WARNING_MESSAGE);
@@ -250,8 +251,11 @@ public class Ventana extends JFrame { //Inicio class Ventana
             try {		 //Abrir Archivo
                 StringTokenizer op;
                 String linea, lin, raiz, tipo, e = new String("");
-                LinkedList<String> l = new LinkedList<String>(), lista = new LinkedList<String>();
+                LinkedList<String> l = new LinkedList<>(), 
+                        lista = new LinkedList<>();
                 int retval = Abrir.showOpenDialog(Ventana.this), tareas, act;
+                File workingDirectory = new File(System.getProperty("user.dir"));
+                Abrir.setCurrentDirectory(workingDirectory);
                 if (retval == JFileChooser.APPROVE_OPTION) {
                     File name = Abrir.getSelectedFile();
                     BufferedReader entrada = new BufferedReader(new FileReader(name));
@@ -349,7 +353,7 @@ public class Ventana extends JFrame { //Inicio class Ventana
                         g.drawOval(i * cons - 15, y * cons - 15, 30, 30);
                         g.setFont(f);
                         g.setColor(Color.WHITE);
-                        g.drawString(arbol.getTaskName(), i * cons - 11, y * cons + 5);
+                        g.drawString(arbol.getContent().toString(), i * cons - 11, y * cons + 5);
                     } else {
                         g.setColor(Color.BLACK);
                         g.fillRect(i * cons - 18, y * cons - 13, 36, 26);
@@ -357,7 +361,7 @@ public class Ventana extends JFrame { //Inicio class Ventana
                         g.drawRect(i * cons - 18, y * cons - 13, 36, 26);
                         g.setFont(f);
                         g.setColor(Color.WHITE);
-                        g.drawString(arbol.getTaskName(), i * cons - 11, y * cons + 5);
+                        g.drawString(arbol.getContent().toString(), i * cons - 11, y * cons + 5);
                     }
                 } else {
                     if (arbol.isAndTask()) {
@@ -367,7 +371,7 @@ public class Ventana extends JFrame { //Inicio class Ventana
                         g.drawOval(i * cons - 15, y * cons - 15, 30, 30);
                         g.setFont(f);
                         g.setColor(Color.BLACK);
-                        g.drawString(arbol.getTaskName(), i * cons - 11, y * cons + 5);
+                        g.drawString(arbol.getContent().toString(), i * cons - 11, y * cons + 5);
                     } else {
                         g.setColor(Color.WHITE);
                         g.fillRect(i * cons - 18, y * cons - 13, 36, 26);
@@ -375,7 +379,7 @@ public class Ventana extends JFrame { //Inicio class Ventana
                         g.drawRect(i * cons - 18, y * cons - 13, 36, 26);
                         g.setColor(Color.BLACK);
                         g.setFont(f);
-                        g.drawString(arbol.getTaskName(), i * cons - 11, y * cons + 5);
+                        g.drawString(arbol.getContent().toString(), i * cons - 11, y * cons + 5);
                     }
                 }
                 this.setPreferredSize(new Dimension((Area + 2) * cons, Area * cons));
@@ -386,7 +390,7 @@ public class Ventana extends JFrame { //Inicio class Ventana
                 LinkedList<AndOrTree> hijos = new LinkedList<AndOrTree>();
                 LinkedList<Integer> coor_hijos = new LinkedList<Integer>();
                 int xx = x;
-                hijos = a.getChildren();
+                hijos = (LinkedList<AndOrTree>) a.getChildren();
                 if (a.getLeftChild() != null) {
                     while (hijos.size() > 0) {
                         coor_hijos.addLast(dibujarArbol(g, hijos.getFirst(), y + 2, tam, f));
@@ -412,7 +416,7 @@ public class Ventana extends JFrame { //Inicio class Ventana
                                 g.setFont(f);
                                 g.setColor(Color.BLACK);
                                 g.drawOval((coor_hijos.getFirst() * tam) - 10, (y + 2) * tam - 10, 20, 20);
-                                g.drawString(hijos.getFirst().getTaskName(), (coor_hijos.getFirst() * tam) - 11, (y + 2) * tam + 25);
+                                g.drawString(hijos.getFirst().getContent().toString(), (coor_hijos.getFirst() * tam) - 11, (y + 2) * tam + 25);
                             } else {
                                 if (hijos.getFirst().isAndTask()) {
                                     g.setColor(Color.BLACK);
@@ -421,7 +425,7 @@ public class Ventana extends JFrame { //Inicio class Ventana
                                     g.drawOval((coor_hijos.getFirst() * tam) - 15, (y + 2) * tam - 15, 30, 30);
                                     g.setColor(Color.WHITE);
                                     g.setFont(f);
-                                    g.drawString(hijos.getFirst().getTaskName(), (coor_hijos.getFirst() * tam) - 11, (y + 2) * tam + 5);
+                                    g.drawString(hijos.getFirst().getContent().toString(), (coor_hijos.getFirst() * tam) - 11, (y + 2) * tam + 5);
                                 } else {
                                     g.setColor(Color.BLACK);
                                     g.fillRect((coor_hijos.getFirst() * tam - 18), (y + 2) * tam - 13, 36, 26);
@@ -429,7 +433,7 @@ public class Ventana extends JFrame { //Inicio class Ventana
                                     g.drawRect((coor_hijos.getFirst() * tam - 18), (y + 2) * tam - 13, 36, 26);
                                     g.setFont(f);
                                     g.setColor(Color.WHITE);
-                                    g.drawString(hijos.getFirst().getTaskName(), (coor_hijos.getFirst() * tam) - 11, (y + 2) * tam + 5);
+                                    g.drawString(hijos.getFirst().getContent().toString(), (coor_hijos.getFirst() * tam) - 11, (y + 2) * tam + 5);
                                 }
                             }
                         } else {
@@ -439,7 +443,7 @@ public class Ventana extends JFrame { //Inicio class Ventana
                                 g.setFont(f);
                                 g.setColor(Color.BLACK);
                                 g.drawOval((coor_hijos.getFirst() * tam) - 10, (y + 2) * tam - 10, 20, 20);
-                                g.drawString(hijos.getFirst().getTaskName(), (coor_hijos.getFirst() * tam) - 11, (y + 2) * tam + 25);
+                                g.drawString(hijos.getFirst().getContent().toString(), (coor_hijos.getFirst() * tam) - 11, (y + 2) * tam + 25);
                             } else {
                                 if (hijos.getFirst().isAndTask()) {
                                     g.setColor(Color.WHITE);
@@ -448,7 +452,7 @@ public class Ventana extends JFrame { //Inicio class Ventana
                                     g.drawOval((coor_hijos.getFirst() * tam) - 15, (y + 2) * tam - 15, 30, 30);
                                     g.setFont(f);
                                     g.setColor(Color.BLACK);
-                                    g.drawString(hijos.getFirst().getTaskName(), (coor_hijos.getFirst() * tam) - 11, (y + 2) * tam + 5);
+                                    g.drawString(hijos.getFirst().getContent().toString(), (coor_hijos.getFirst() * tam) - 11, (y + 2) * tam + 5);
                                 } else {
                                     g.setColor(Color.WHITE);
                                     g.fillRect((coor_hijos.getFirst() * tam - 18), (y + 2) * tam - 13, 36, 26);
@@ -456,7 +460,7 @@ public class Ventana extends JFrame { //Inicio class Ventana
                                     g.drawRect((coor_hijos.getFirst() * tam - 18), (y + 2) * tam - 13, 36, 26);
                                     g.setFont(f);
                                     g.setColor(Color.BLACK);
-                                    g.drawString(hijos.getFirst().getTaskName(), (coor_hijos.getFirst() * tam) - 11, (y + 2) * tam + 5);
+                                    g.drawString(hijos.getFirst().getContent().toString(), (coor_hijos.getFirst() * tam) - 11, (y + 2) * tam + 5);
                                 }
                             }
                         }
