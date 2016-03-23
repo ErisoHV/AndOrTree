@@ -47,8 +47,6 @@ public class UIInterface extends JFrame {
     JButton minAtomicButton = new JButton("Atomic minimum");
     JButton showTree = new JButton("Show tree");
     JButton treeReportButton = new JButton("Print tasks report");
-    
-    
 
     Box horizontal1 = Box.createHorizontalBox();
     Box horizontal2 = Box.createHorizontalBox();
