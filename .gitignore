@@ -1,8 +1,8 @@
 /dist/
 /build/
-/javadoc-img/
-/nbproject/
+javadoc-img/
+nbproject/
 /test/
-*.xml
-.mf
-.properties
+build.xml
+manifest.mf
+project.properties
