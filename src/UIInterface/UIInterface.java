@@ -35,7 +35,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
-public class Ventana extends JFrame { //Inicio class Ventana
+public class UIInterface extends JFrame {
 
     JMenuBar menubar = new JMenuBar();
     JMenu menu1 = new JMenu("File");
@@ -70,13 +70,40 @@ public class Ventana extends JFrame { //Inicio class Ventana
     private final String REPORT = "Please indicate the name of the File output:";
     private final String REPORT_ERROR = "Could not create the file: {0}";
     
-     Ventana() {
+     public UIInterface() {
         super("AND - OR Tree");		//Titulo de la ventana
         menubar.add(menu1);
         menu1.add(openOption);
         setJMenuBar(menubar);
+
+        horizontal1.add(Box.createHorizontalGlue());
+        horizontal1.add(countAtomicButton);
+        horizontal1.add(Box.createHorizontalGlue());
+        horizontal1.add(doAtomicButton);
+        horizontal1.add(Box.createHorizontalGlue());
+        horizontal1.add(undoAtomicButton);
+        horizontal1.add(Box.createHorizontalGlue());
+        horizontal1.add(minAtomicButton);
+
+        horizontal2.add(Box.createHorizontalGlue());
+        horizontal2.add(showTree);
+        horizontal2.add(Box.createHorizontalGlue());
+        horizontal2.add(treeReportButton);
+        horizontal2.add(Box.createHorizontalGlue());
+
+        tabs.addTab("Atomic Tasks", horizontal1);
+        tabs.addTab("Results", horizontal2);
+        this.add(tabs, BorderLayout.CENTER);
         
-        //Actions
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setSize(550, 350);
+        setVisible(true);
+        setLocationRelativeTo(null);
+        init();
+    }
+
+     private void init(){
+         //Actions
         openOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -124,40 +151,7 @@ public class Ventana extends JFrame { //Inicio class Ventana
               reportTreeActions();
             }
         });
-
-        /**
-         * **************** Agregando Botones al Box *********************
-         */
-        horizontal1.add(Box.createHorizontalGlue());
-        horizontal1.add(countAtomicButton);
-        horizontal1.add(Box.createHorizontalGlue());
-        horizontal1.add(doAtomicButton);
-        horizontal1.add(Box.createHorizontalGlue());
-        horizontal1.add(undoAtomicButton);
-        horizontal1.add(Box.createHorizontalGlue());
-        horizontal1.add(minAtomicButton);
-
-        horizontal2.add(Box.createHorizontalGlue());
-        horizontal2.add(showTree);
-        horizontal2.add(Box.createHorizontalGlue());
-        horizontal2.add(treeReportButton);
-        horizontal2.add(Box.createHorizontalGlue());
-
-        /**
-         * *************** Agregando Box a la ventana ****************
-         */
-        tabs.addTab("Tareas Atomicas", horizontal1);
-        tabs.addTab("Imprimir Resultados", horizontal2);
-        this.add(tabs, BorderLayout.CENTER);
-
-        /**
-         * ************** atributos de la ventana *********************
-         */
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setSize(550, 350);
-        setVisible(true);
-        setLocationRelativeTo(null);
-    }
+     }
 
      private void showTreeActions(){
          if (checkTree()){
@@ -190,11 +184,11 @@ public class Ventana extends JFrame { //Inicio class Ventana
              } catch (FileNotFoundException ex) {
                  JOptionPane.showMessageDialog(null, FILE_ERROR,
                             "Error", JOptionPane.ERROR_MESSAGE);
-                 Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+                 Logger.getLogger(UIInterface.class.getName()).log(Level.SEVERE, null, ex);
              }  catch (IOException ex) {
                      JOptionPane.showMessageDialog(null, FILE_ERROR,
                             "Error", JOptionPane.ERROR_MESSAGE);
-                     Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+                     Logger.getLogger(UIInterface.class.getName()).log(Level.SEVERE, null, ex);
                  }
          }
     }
@@ -302,8 +296,4 @@ public class Ventana extends JFrame { //Inicio class Ventana
         return false;
         
     }
-
-    public static void main(String args[]) {
-        Ventana ventana = new Ventana();
-    }
-}//Fin class Ventana
+}
