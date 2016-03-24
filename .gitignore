@@ -6,3 +6,5 @@ nbproject/
 build.xml
 manifest.mf
 project.properties
+*.out
+*.txt
