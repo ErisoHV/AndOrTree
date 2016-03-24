@@ -1,4 +1,4 @@
-package UIInterface;
+package UIHelper;
 
 import andortree.AndOrTree;
 import java.io.BufferedReader;
