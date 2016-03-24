@@ -191,6 +191,10 @@ public class AndOrTree extends Tree{
             return type;
         }
     }
+    
+    public String getTaskType(){
+        return andTask?AND:OR;
+    }
 
     /**
      * Given the task name, return true if the node is already executed

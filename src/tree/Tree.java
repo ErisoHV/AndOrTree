@@ -123,9 +123,9 @@ public class Tree<T> {
      * Preorder route
      * @param nodeList node content list
      */
-    public void preorder(LinkedList<T> nodeList) {
+    public void preorder(LinkedList<Tree> nodeList) {
         Tree aux = null;
-        nodeList.addLast(content);
+        nodeList.addLast(this);
         if (leftChild != null) {
             aux = leftChild;
             while (aux != null) {
@@ -139,19 +139,19 @@ public class Tree<T> {
      * Inorder route
      * @param nodeList node content list
      */
-    public void inorder(LinkedList<T> nodeList) {		//Recorrido inorder del Arbol
+    public void inorder(LinkedList<Tree> nodeList) {		//Recorrido inorder del Arbol
         Tree aux = null;
         if (leftChild != null) {
             aux = leftChild;
             aux.inorder(nodeList);
             aux = aux.getRightChild();
-            nodeList.addLast(content);
+            nodeList.addLast(this);
             while (aux != null) {
                 aux.inorder(nodeList);
                 aux = aux.getRightChild();
             }
         } else {
-            nodeList.addLast(content);
+            nodeList.addLast(this);
         }
     }
 
@@ -159,7 +159,7 @@ public class Tree<T> {
      * Postorder route
      * @param nodeList node content list
      */
-    public void postorder(LinkedList<T>  nodeList) {		//Recorrido prostorden del Arbol
+    public void postorder(LinkedList<Tree>  nodeList) {		//Recorrido prostorden del Arbol
         Tree aux = null;
         if (leftChild != null) {
             aux = leftChild;
@@ -168,9 +168,8 @@ public class Tree<T> {
                 aux = aux.getRightChild();
             }
         }
-        nodeList.addLast(content);
+        nodeList.addLast(this);
     }
-    
     
     /**
      * Get the count of the nodes in the tree

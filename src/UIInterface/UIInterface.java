@@ -12,8 +12,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.MessageFormat;
-import java.util.LinkedList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Box;
@@ -56,14 +58,15 @@ public class UIInterface extends JFrame {
     private final String DO_TASK = "Select the ID of the task to perform:";
     private final String UNDO_TASK = "Enter the ID of the task that you want to undo:";
     private final String ATOMIC_MINIMUM = "The atomic minimum is: {0}";
-    private final String REPORT = "Please indicate the name of the File output:";
+    private final String REPORT = "Please select the tree traversal:";
     private final String REPORT_ERROR = "Could not create the file: {0}";
+    private final String REPORT_OK = "The file: {0} was created successfully";
     
      public UIInterface() {
         super("AND - OR Tree");
         menubar.add(menu1);
         menu1.add(openOption);
-        setJMenuBar(menubar);
+        setJMenuBar(menubar);     
 
         horizontal1.add(Box.createHorizontalGlue());
         horizontal1.add(countAtomicButton);
@@ -83,6 +86,8 @@ public class UIInterface extends JFrame {
         tabs.addTab("Atomic Tasks", horizontal1);
         tabs.addTab("Results", horizontal2);
         this.add(tabs, BorderLayout.CENTER);
+        
+        enableOperations(false);
         
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setSize(550, 350);
@@ -142,6 +147,15 @@ public class UIInterface extends JFrame {
         });
      }
 
+     private void enableOperations(boolean enable){
+        countAtomicButton.setEnabled(enable);
+        doAtomicButton.setEnabled(enable);
+        undoAtomicButton.setEnabled(enable);
+        minAtomicButton.setEnabled(enable);
+        showTree.setEnabled(enable);
+        treeReportButton.setEnabled(enable);
+     }
+     
      private void showTreeActions(){
          if (checkTree()){
              treeWindow.setTreeStructure(treeStructure);
@@ -163,10 +177,10 @@ public class UIInterface extends JFrame {
                  File name = open.getSelectedFile();
                  BufferedReader input = new BufferedReader(new FileReader(name));
                  if (name.exists()) {
-                     treeStructure.readTree(input);
-                     
-                     showTreeActions();
-                     
+                     if(treeStructure.readTree(input)){
+                         showTreeActions();
+                         enableOperations(true);
+                     }
                      input.close();
                  }
                  
@@ -192,7 +206,8 @@ public class UIInterface extends JFrame {
     
     private void doAtomicTaskActions(){
         if (checkTree()) {
-            String task = showLeafsOptionPane(DO_TASK);
+            String task = showOptionPane(DO_TASK, 
+                    treeStructure.getAtomicTasks().toArray());
             if (task != null && !task.isEmpty() && checkIsLeaf(task)) {
                treeStructure.doUndoAtomicTask(task, true);
                treeWindow.refreshTreeWindow();
@@ -202,7 +217,8 @@ public class UIInterface extends JFrame {
     
      public void UndoAtomicTaskActions() {
          if (checkTree()) {
-             String task = showLeafsOptionPane(UNDO_TASK);
+             String task = showOptionPane(UNDO_TASK, 
+                    treeStructure.getAtomicTasks().toArray());
              if (task != null && !task.isEmpty() && checkIsLeaf(task)) {
                  treeStructure.doUndoAtomicTask(task, false);
                  treeWindow.refreshTreeWindow();
@@ -221,33 +237,27 @@ public class UIInterface extends JFrame {
     
     private boolean reportTreeActions(){
        if (checkTree()) {
-            String name = JOptionPane.showInputDialog(REPORT);
+            String traversal = showOptionPane(REPORT, 
+                    new Object[]{TreeStructureLoader.INORDER,
+                    TreeStructureLoader.POSTORDER, 
+                    TreeStructureLoader.PREORDER});
+            DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+                    
+            String name = traversal + "_" + dateFormat.format(new Date()) + ".out";
             if (name != null && !name.isEmpty()) {
                 try {
                     FileWriter fw = new FileWriter(name);
                     try (BufferedWriter output
                             = new BufferedWriter(new BufferedWriter(fw))) {
-                        LinkedList<String> list = new LinkedList<>();
-                        int i = 0;
-                        treeStructure.getAndOrTree().preorder(list);
-                        while (i < list.size()) {
-                            output.write(list.get(i));
-                            output.write(" ");
-                            i++;
-                        }
-                        output.write("\n");
-                        i = 0;
-                        while (i < list.size()) {
-                            output.write(list.get(i) + " "
-                                    + treeStructure.getAndOrTree()
-                                            .getTaskType(list.get(i))
-                                    + " " + treeStructure.getAndOrTree()
-                                            .isExecuted(list.get(i)) + "\n");
-                            i++;
-                        }
+                        StringBuilder out = treeStructure.reportTree(traversal);
+                        output.write(out.toString());
+                        JOptionPane.showMessageDialog(null, MessageFormat
+                            .format(REPORT_OK, name),
+                            "", JOptionPane.INFORMATION_MESSAGE);
+                        return true;
                     }
-                    return true;
-                } catch (IOException ioException) {	//Mensaje de Error
+                } catch (IOException ioException) {
+                    System.out.println(ioException.getCause());
                     JOptionPane.showMessageDialog(null, MessageFormat
                             .format(REPORT_ERROR, name),
                             "Error", JOptionPane.WARNING_MESSAGE);
@@ -277,12 +287,12 @@ public class UIInterface extends JFrame {
         
     }
     
-    private String showLeafsOptionPane(String msg){
+    private String showOptionPane(String msg, Object[] options){
         JFrame frame = new JFrame();
-        String id = (String) JOptionPane.showInputDialog(frame, msg, "Atomic Tasks: ",
+        String id = (String) JOptionPane.showInputDialog(frame, msg, "",
         JOptionPane.QUESTION_MESSAGE, null, 
-        treeStructure.getAtomicTasks().toArray(), 
-        treeStructure.getAtomicTasks().toArray()[0]);
+        options, 
+        options[0]);
         return id;
     }
     

@@ -18,7 +18,11 @@ public class TreeStructureLoader{
     private LinkedList<String> atomicTasks = new LinkedList<>();
     private int atomicMinimun;
     
-    public void readTree(BufferedReader input) {
+    public static String INORDER = "INORDER";
+    public static String PREORDER = "PREORDER";
+    public static String POSTORDER = "POSTORDER";
+    
+    public boolean readTree(BufferedReader input) {
         treeStructure = new LinkedList<>();
         tree = new AndOrTree();
         atomicTasks = new LinkedList<>();
@@ -28,10 +32,14 @@ public class TreeStructureLoader{
             readTasksStructure(input);
             fillTreeTasksList();
             atomicMinimun = tree.getAtomicMinimum();
+            
+            return true;
+            
         } catch (IOException ex) {
             Logger.getLogger(TreeStructureLoader.class.getName())
                     .log(Level.SEVERE, null, ex);
         }
+        return false;
     }
     
     
@@ -89,5 +97,30 @@ public class TreeStructureLoader{
         atomicMinimun = tree.getAtomicMinimum();
     }
     
-    
+    public StringBuilder reportTree(String traversal){
+       StringBuilder out = new StringBuilder();
+       LinkedList<AndOrTree> pre = new LinkedList<>();
+       
+       switch(traversal){
+           case "INORDER": tree.inorder(pre); break;
+               case "POSTORDER": tree.postorder(pre); break;
+                   case "PREORDER": tree.preorder(pre); break;
+           default: break;
+       }
+       if (!pre.isEmpty()){
+           //Nodes List
+            for (AndOrTree i : pre){
+                out.append(i.getContent()).append(" ");
+            }
+
+            //Tasks status
+            out.append("\n");
+            //Nodes List
+            for (AndOrTree i : pre){
+                out.append(i.getTaskType()).append(" ")
+                        .append(i.isExecuted()).append("\n");
+            }
+       }
+       return out;
+    }
 }
