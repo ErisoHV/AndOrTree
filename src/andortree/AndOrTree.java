@@ -305,6 +305,43 @@ public class AndOrTree extends Tree{
         return isExecuted;
     }
     
+    
+    /**
+     * Do/Undo atomic task. Updated the entire tree
+     * @param taskname
+     * @param isExec if true the task is executed
+     * @return 
+     */
+     public boolean setExecuteValue(Object taskname, boolean isExec) {
+        AndOrTree aux;
+        boolean val = isExec;
+        if (getLeftChild() != null) {
+            aux = (AndOrTree) getLeftChild();
+            if (andTask) {
+                val = true;
+                while (aux != null) {
+                    val = aux.setExecuteValue(taskname, isExec) && val;
+                    aux = (AndOrTree) aux.getRightChild();
+                }
+                isExecuted = val;
+            } else {
+                val = false;
+                while (aux != null) {
+                    val = aux.setExecuteValue(taskname, isExec) || val;
+                    aux = (AndOrTree) aux.getRightChild();
+                }
+                isExecuted = val;
+            }
+        } else {
+            if (getContent().toString().equals(taskname)) {
+                isExecuted = isExec;
+            }
+        }
+        return isExecuted;
+    }
+    
+    
+    
     /**
      * Calculates and returns the minimum number of atomic tasks 
      * that must be done from the current situation to have 

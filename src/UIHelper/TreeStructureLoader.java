@@ -13,13 +13,21 @@ import java.util.logging.Logger;
  * @author ErisoHV
  */
 public class TreeStructureLoader{
-    private final LinkedList<String> treeStructure = new LinkedList<>();
-    private final AndOrTree tree = new AndOrTree();
+    private LinkedList<String> treeStructure = new LinkedList<>();
+    private AndOrTree tree = new AndOrTree();
+    private LinkedList<String> atomicTasks = new LinkedList<>();
+    private int atomicMinimun;
     
     public void readTree(BufferedReader input) {
+        treeStructure = new LinkedList<>();
+        tree = new AndOrTree();
+        atomicTasks = new LinkedList<>();
+        atomicMinimun = 0;
         try {
             readTreeStructure(input);
             readTasksStructure(input);
+            fillTreeTasksList();
+            atomicMinimun = tree.getAtomicMinimum();
         } catch (IOException ex) {
             Logger.getLogger(TreeStructureLoader.class.getName())
                     .log(Level.SEVERE, null, ex);
@@ -53,7 +61,10 @@ public class TreeStructureLoader{
                 tree.changeToOrTask(root);
             }
         }
-        
+    }
+    
+    private void fillTreeTasksList(){
+       tree.getLeafs(atomicTasks);
     }
     
     public LinkedList<String> getTreeStructure(){
@@ -62,6 +73,20 @@ public class TreeStructureLoader{
     
     public AndOrTree getAndOrTree(){
         return tree;
+    }
+    
+    public LinkedList<String> getAtomicTasks(){
+        return atomicTasks;
+    }
+    
+    public int getAtomicMinimum(){
+        return atomicMinimun;
+    }
+    
+    public void doUndoAtomicTask(String task, boolean isExec){
+        tree.setExecuteValue(task, isExec);
+        //refresk the atomic minimum
+        atomicMinimun = tree.getAtomicMinimum();
     }
     
     

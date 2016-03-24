@@ -42,7 +42,8 @@ public class TreeCanvas extends JPanel{
                 g.drawOval(i * nodeDistance - 15, y * nodeDistance - 15, 30, 30);
                 g.setFont(FONT);
                 g.setColor(Color.WHITE);
-                g.drawString(treeStructure.getAndOrTree().getContent().toString(), i * nodeDistance - 11, y * nodeDistance + 5);
+                g.drawString(treeStructure.getAndOrTree().getContent().toString(), 
+                        i * nodeDistance - 11, y * nodeDistance + 5);
             } else {
                 g.setColor(Color.BLACK);
                 g.fillRect(i * nodeDistance - 18, y * nodeDistance - 13, 36, 26);
@@ -50,7 +51,8 @@ public class TreeCanvas extends JPanel{
                 g.drawRect(i * nodeDistance - 18, y * nodeDistance - 13, 36, 26);
                 g.setFont(FONT);
                 g.setColor(Color.WHITE);
-                g.drawString(treeStructure.getAndOrTree().getContent().toString(), i * nodeDistance - 11, y * nodeDistance + 5);
+                g.drawString(treeStructure.getAndOrTree().getContent().toString(), 
+                        i * nodeDistance - 11, y * nodeDistance + 5);
             }
         } else {
             if (treeStructure.getAndOrTree().isAndTask()) {
@@ -60,7 +62,8 @@ public class TreeCanvas extends JPanel{
                 g.drawOval(i * nodeDistance - 15, y * nodeDistance - 15, 30, 30);
                 g.setFont(FONT);
                 g.setColor(Color.BLACK);
-                g.drawString(treeStructure.getAndOrTree().getContent().toString(), i * nodeDistance - 11, y * nodeDistance + 5);
+                g.drawString(treeStructure.getAndOrTree().getContent().toString(), 
+                        i * nodeDistance - 11, y * nodeDistance + 5);
             } else {
                 g.setColor(Color.WHITE);
                 g.fillRect(i * nodeDistance - 18, y * nodeDistance - 13, 36, 26);
@@ -68,10 +71,12 @@ public class TreeCanvas extends JPanel{
                 g.drawRect(i * nodeDistance - 18, y * nodeDistance - 13, 36, 26);
                 g.setColor(Color.BLACK);
                 g.setFont(FONT);
-                g.drawString(treeStructure.getAndOrTree().getContent().toString(), i * nodeDistance - 11, y * nodeDistance + 5);
+                g.drawString(treeStructure.getAndOrTree().getContent().toString(), 
+                        i * nodeDistance - 11, y * nodeDistance + 5);
             }
         }
-        setPreferredSize(new Dimension((area + 2) * nodeDistance, area * nodeDistance));
+        setPreferredSize(new Dimension((area + 2) * nodeDistance, 
+                area * nodeDistance));
      }
     
     private Integer dibujarArbol(Graphics g, AndOrTree a, Integer y, Integer tam, Font f) {
@@ -110,15 +115,16 @@ public class TreeCanvas extends JPanel{
                                 g.drawOval((childsCoordinates.getFirst() * tam) - 10,
                                         (y + 2) * tam - 10, 20, 20);
                                 g.drawString(childs.getFirst().getContent().toString(),
-                                        (childsCoordinates.getFirst() * tam) - 11, (y + 2) * tam + 25);
+                                        (childsCoordinates.getFirst() * tam) - 11,
+                                        (y + 2) * tam + 25);
                             } else {
                                 if (childs.getFirst().isAndTask()) {
                                     g.setColor(Color.BLACK);
-                                    g.fillOval((childsCoordinates.getFirst() * tam) - 15,
-                                            (y + 2) * tam - 15, 31, 31);
+                                    g.fillOval((childsCoordinates.getFirst() * tam)
+                                            - 15, (y + 2) * tam - 15, 31, 31);
                                     g.setColor(Color.BLACK);
-                                    g.drawOval((childsCoordinates.getFirst() * tam) - 15,
-                                            (y + 2) * tam - 15, 30, 30);
+                                    g.drawOval((childsCoordinates.getFirst() * tam)
+                                            - 15, (y + 2) * tam - 15, 30, 30);
                                     g.setColor(Color.WHITE);
                                     g.setFont(f);
                                     g.drawString(childs.getFirst().getContent()

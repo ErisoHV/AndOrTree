@@ -53,14 +53,14 @@ public class UIInterface extends JFrame {
             + "performing an operation";
     private final String ATOMIC_COUNT = "The number of atomic tasks executed is: {0}";
     private final String ATOMIC_TASK = "The selected task is not an atomic task";
-    private final String DO_TASK = "Enter the ID of the task to perform:";
+    private final String DO_TASK = "Select the ID of the task to perform:";
     private final String UNDO_TASK = "Enter the ID of the task that you want to undo:";
     private final String ATOMIC_MINIMUM = "The atomic minimum is: {0}";
     private final String REPORT = "Please indicate the name of the File output:";
     private final String REPORT_ERROR = "Could not create the file: {0}";
     
      public UIInterface() {
-        super("AND - OR Tree");		//Titulo de la ventana
+        super("AND - OR Tree");
         menubar.add(menu1);
         menu1.add(openOption);
         setJMenuBar(menubar);
@@ -192,9 +192,9 @@ public class UIInterface extends JFrame {
     
     private void doAtomicTaskActions(){
         if (checkTree()) {
-            String task = JOptionPane.showInputDialog(DO_TASK);
+            String task = showLeafsOptionPane(DO_TASK);
             if (task != null && !task.isEmpty() && checkIsLeaf(task)) {
-               treeStructure.getAndOrTree().doAtomicTask(task);
+               treeStructure.doUndoAtomicTask(task, true);
                treeWindow.refreshTreeWindow();
             }
         }
@@ -202,9 +202,9 @@ public class UIInterface extends JFrame {
     
      public void UndoAtomicTaskActions() {
          if (checkTree()) {
-             String task = JOptionPane.showInputDialog(UNDO_TASK);
+             String task = showLeafsOptionPane(UNDO_TASK);
              if (task != null && !task.isEmpty() && checkIsLeaf(task)) {
-                 treeStructure.getAndOrTree().undoAtomicTask(task);
+                 treeStructure.doUndoAtomicTask(task, false);
                  treeWindow.refreshTreeWindow();
              }
          } 
@@ -214,7 +214,7 @@ public class UIInterface extends JFrame {
         if (checkTree()) {
             JOptionPane.showMessageDialog(null,
                     MessageFormat.format(ATOMIC_MINIMUM, 
-                            treeStructure.getAndOrTree().getAtomicMinimum()),
+                            treeStructure.getAtomicMinimum()),
                     "Atomic Minimum", JOptionPane.INFORMATION_MESSAGE);
         }
     }
@@ -257,10 +257,11 @@ public class UIInterface extends JFrame {
        return false;
     }
 
-    private boolean checkTree(){
+    private boolean checkTree(){ 
         if (!treeStructure.getAndOrTree().isEmpty()) {
             return true;
         } 
+       
          JOptionPane.showMessageDialog(null, EMPTY_TREE, "Error", 
                  JOptionPane.ERROR_MESSAGE);
          return false;
@@ -275,4 +276,14 @@ public class UIInterface extends JFrame {
         return false;
         
     }
+    
+    private String showLeafsOptionPane(String msg){
+        JFrame frame = new JFrame();
+        String id = (String) JOptionPane.showInputDialog(frame, msg, "Atomic Tasks: ",
+        JOptionPane.QUESTION_MESSAGE, null, 
+        treeStructure.getAtomicTasks().toArray(), 
+        treeStructure.getAtomicTasks().toArray()[0]);
+        return id;
+    }
+    
 }

@@ -192,6 +192,25 @@ public class Tree<T> {
     }
     
     /**
+     * Get the tree leafs
+     * @param nodeList leafs list
+     * @return leafs
+     */
+    public void getLeafs(LinkedList<T>  nodeList) {
+        Tree aux;
+        if (leftChild != null) {
+            aux = leftChild;
+            while (aux != null) {
+                aux.getLeafs(nodeList);
+                aux = aux.getRightChild();
+            }
+        } else {
+            nodeList.add(content);
+        }
+    }
+    
+    
+    /**
      * Return a true if the node is a Leaf
      * @param nodeContent Node content to compare
      * @return True if is a Leaf

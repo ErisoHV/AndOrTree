@@ -17,11 +17,11 @@ import javax.swing.WindowConstants;
  * @author Erika
  */
 public class TreeWindow extends JFrame{
-    JButton refresh = new JButton("Refresh Tree");	//Boton refresh
+    JButton refresh = new JButton("Refresh Tree");
     JLabel info = new JLabel("Press \"Refresh Tree\" to view the "
             + "tasks performed recently");
     TreeCanvas canvas;
-    JScrollPane scroll;	//Barra de la Ventana
+    JScrollPane scroll;
 
     public TreeWindow(TreeStructureLoader tree){
         setTitle("Print tree");
@@ -65,13 +65,12 @@ public class TreeWindow extends JFrame{
             repaint();
         }
     }
-    
-    //Redibuja el Arbol en caso de que muevan las barras
-    public class RefreshScroll implements AdjustmentListener{ //Inicio class RefreshScroll  
+
+    public class RefreshScroll implements AdjustmentListener{
        @Override
        public void adjustmentValueChanged(AdjustmentEvent e){
               repaint();
        }
-    }//Fin class RefreshScroll
+    }
     
 }
