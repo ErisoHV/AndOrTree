@@ -1,6 +1,5 @@
 package UIHelper;
 
-import UIInterface.TreeStructureLoader;
 import andortree.AndOrTree;
 import java.awt.Color;
 import java.awt.Dimension;
