@@ -191,28 +191,21 @@ public class UIInterface extends JFrame {
     }
     
     private void doAtomicTaskActions(){
-        if (checkTree()) {    //Ejecuta una tarea Atomica dada
-            JOptionPane promptDialog = new JOptionPane();
-            String task = promptDialog.showInputDialog(DO_TASK);
+        if (checkTree()) {
+            String task = JOptionPane.showInputDialog(DO_TASK);
             if (task != null && !task.isEmpty() && checkIsLeaf(task)) {
                treeStructure.getAndOrTree().doAtomicTask(task);
                treeWindow.refreshTreeWindow();
-            } else {
-                promptDialog.setOptionType(JOptionPane.CLOSED_OPTION);
             }
         }
     }
     
      public void UndoAtomicTaskActions() {
          if (checkTree()) {
-             JOptionPane promptDialog = new JOptionPane();
-             String task
-                     = promptDialog.showInputDialog(UNDO_TASK);
+             String task = JOptionPane.showInputDialog(UNDO_TASK);
              if (task != null && !task.isEmpty() && checkIsLeaf(task)) {
                  treeStructure.getAndOrTree().undoAtomicTask(task);
                  treeWindow.refreshTreeWindow();
-             } else {
-                 promptDialog.setOptionType(JOptionPane.CLOSED_OPTION);
              }
          } 
     }
@@ -222,13 +215,12 @@ public class UIInterface extends JFrame {
             JOptionPane.showMessageDialog(null,
                     MessageFormat.format(ATOMIC_MINIMUM, 
                             treeStructure.getAndOrTree().getAtomicMinimum()),
-                    "Minimo Atomico", JOptionPane.INFORMATION_MESSAGE);
+                    "Atomic Minimum", JOptionPane.INFORMATION_MESSAGE);
         }
     }
     
     private boolean reportTreeActions(){
        if (checkTree()) {
-            JOptionPane promptDialog = new JOptionPane();
             String name = JOptionPane.showInputDialog(REPORT);
             if (name != null && !name.isEmpty()) {
                 try {
@@ -260,8 +252,6 @@ public class UIInterface extends JFrame {
                             .format(REPORT_ERROR, name),
                             "Error", JOptionPane.WARNING_MESSAGE);
                 }
-            } else {
-                promptDialog.setOptionType(JOptionPane.CLOSED_OPTION);
             }
         }
        return false;
