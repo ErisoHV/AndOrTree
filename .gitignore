@@ -10,6 +10,6 @@ project.properties
 *.txt
 /bin/
 /target/
-/.classpath/
-/.project/
-/.settings/
+.classpath
+.project
+.settings
