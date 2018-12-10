@@ -1,7 +1,6 @@
-package andortree;
+package main.java.com.erisohv.andortree.tree;
 
 import java.util.LinkedList;
-import tree.Tree;
 /**
  * ADN-OR tree is an n-ary tree used to represent knowledge about 
  * groups of tasks to be executed to achieve some goal.<br/>
@@ -19,10 +18,10 @@ public class AndOrTree extends Tree{
     private boolean orTask;
     private boolean isExecuted;
     
-    public static String AND = "and";
-    public static String OR = "or";
-    public static String COMMA = ",";
-    public static String RIGHTPARENTHESIS = ")";
+    public static final String AND = "and";
+    public static final String OR = "or";
+    public static final String COMMA = ",";
+    public static final String RIGHTPARENTHESIS = ")";
 
     /**
      * Empty constructor
@@ -71,7 +70,7 @@ public class AndOrTree extends Tree{
      * Change a AndOrTree node type to And given the task name
      * @param taskname The name of the task to change to And
      */
-    public void changeToAndTask(String taskname) {		//Dado el nombre de una taskName, se busca y se cambia a and
+    public void changeToAndTask(String taskname) {
         AndOrTree aux;
         if (getContent().equals(taskname)) {
             andTask = true;
@@ -137,7 +136,7 @@ public class AndOrTree extends Tree{
         AndOrTree aux;
         AndOrTree inic;
         LinkedList<AndOrTree> laux = new LinkedList<>();
-        setContent(new String());
+        setContent("");
         treeStructure.remove();
         b = treeStructure.getFirst();
         treeStructure.remove();
@@ -161,7 +160,7 @@ public class AndOrTree extends Tree{
             laux.removeFirst();
             setLeftChild(inic);
             aux = (AndOrTree) getLeftChild();
-            while (laux.size() > 0) {
+            while (!laux.isEmpty()) {
                 inic = laux.getFirst();
                 laux.removeFirst();
                 aux.setRightChild(inic);
@@ -318,7 +317,7 @@ public class AndOrTree extends Tree{
      */
      public boolean setExecuteValue(Object taskname, boolean isExec) {
         AndOrTree aux;
-        boolean val = isExec;
+        boolean val;
         if (getLeftChild() != null) {
             aux = (AndOrTree) getLeftChild();
             if (andTask) {
@@ -357,8 +356,7 @@ public class AndOrTree extends Tree{
         int cont2 = 0;
         AndOrTree aux;
         aux = (AndOrTree) getLeftChild();
-        if (andTask || orTask) {
-            if (!isExecuted) {
+        if ((andTask || orTask) && !isExecuted) {
                 if (aux != null) {
                     if (andTask) {
                         while (aux != null) {
@@ -378,7 +376,6 @@ public class AndOrTree extends Tree{
                 } else {
                     cont1++;
                 }
-            }
         }
         return cont1;
     }

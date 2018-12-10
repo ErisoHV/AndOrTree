@@ -9,10 +9,10 @@ if it is an AND node is executed if all child nodes are executed.
 OR node is executed if at least one of their children has been done.
 
 Task/nodes types and status:
-<img src="resources/images/02.png?raw=true" height="250" >
+<img src="src/test/java/com/erisohv/andortree/resources/images/02.png?raw=true" height="250" >
 
 AND-OR Tree example:
-<img src="resources/images/01.PNG?raw=true" height="250" >
+<img src="src/test/java/com/erisohv/andortree/resources/images/01.PNG?raw=true" height="250" >
 
 The project was developed with a java swing interface.
 
