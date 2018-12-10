@@ -3,11 +3,13 @@ package main.java.com.erisohv.andortree.ui.helper;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import main.java.com.erisohv.andortree.tree.AndOrTree;
+import main.java.com.erisohv.andortree.tree.Tree;
 
 /**
  *
@@ -18,10 +20,6 @@ public class TreeStructureLoader{
     private AndOrTree tree = new AndOrTree();
     private LinkedList<String> atomicTasks = new LinkedList<>();
     private int atomicMinimun;
-    
-    public static String INORDER = "INORDER";
-    public static String PREORDER = "PREORDER";
-    public static String POSTORDER = "POSTORDER";
     
     public boolean readTree(BufferedReader input) {
         treeStructure = new LinkedList<>();
@@ -54,13 +52,13 @@ public class TreeStructureLoader{
     
     private void readTasksStructure(BufferedReader input) throws IOException{
         String line = input.readLine();
-        int tasks = Integer.valueOf(line).intValue();
+        int tasks = Integer.parseInt(line);
         for (int i = 0; i < tasks; i++) {
             line = input.readLine();
             StringTokenizer operation = new StringTokenizer(line);
             String root = operation.nextToken();
             String type = operation.nextToken();
-            int actual = Integer.valueOf(operation.nextToken()).intValue();
+            int actual = Integer.parseInt(operation.nextToken());
             if (actual == 1) {
                 tree.executeTask(root);
             }
@@ -76,7 +74,7 @@ public class TreeStructureLoader{
        tree.getLeafs(atomicTasks);
     }
     
-    public LinkedList<String> getTreeStructure(){
+    public List<String> getTreeStructure(){
         return treeStructure;
     }
     
@@ -84,7 +82,7 @@ public class TreeStructureLoader{
         return tree;
     }
     
-    public LinkedList<String> getAtomicTasks(){
+    public List<String> getAtomicTasks(){
         return atomicTasks;
     }
     
@@ -103,9 +101,9 @@ public class TreeStructureLoader{
        LinkedList<AndOrTree> pre = new LinkedList<>();
        
        switch(traversal){
-           case "INORDER": tree.inorder(pre); break;
-               case "POSTORDER": tree.postorder(pre); break;
-                   case "PREORDER": tree.preorder(pre); break;
+           case Tree.INORDER: tree.inorder(pre); break;
+               case Tree.POSTORDER: tree.postorder(pre); break;
+                   case Tree.PREORDER: tree.preorder(pre); break;
            default: break;
        }
        if (!pre.isEmpty()){

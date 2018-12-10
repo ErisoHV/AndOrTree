@@ -15,9 +15,9 @@ import main.java.com.erisohv.andortree.tree.AndOrTree;
  * @author ErisoHV
  */
 public class TreeCanvas extends JPanel{
-    private Integer x = 1;
+    private Integer nodesPosition = 1;
     private Integer area = 1;
-    private Font FONT = new Font("Arial Bold", Font.BOLD, 12);
+    private static final Font FONT = new Font("Arial Bold", Font.BOLD, 12);
     private Integer nodeDistance = 35;
     
     TreeStructureLoader treeStructure = new TreeStructureLoader();
@@ -35,7 +35,7 @@ public class TreeCanvas extends JPanel{
         Integer y = 1;
         g.translate(this.getInsets().left, this.getInsets().top);
         Integer i = dibujarArbol(g, treeStructure.getAndOrTree(), y = 1, nodeDistance, FONT);
-        x = 1;
+        nodesPosition = 1;
         if (treeStructure.getAndOrTree().isExecuted()) {
             if (treeStructure.getAndOrTree().isAndTask()) {
                 g.setColor(Color.BLACK);
@@ -83,18 +83,17 @@ public class TreeCanvas extends JPanel{
     
     private Integer dibujarArbol(Graphics g, AndOrTree a, Integer y, Integer tam, Font f) {
                 LinkedList<Integer> childsCoordinates = new LinkedList<>();
-                Integer position = x;
-                LinkedList<AndOrTree> childs = 
-                        (LinkedList<AndOrTree>) a.getChildren();
+                Integer position = nodesPosition;
+                LinkedList<AndOrTree> childs = (LinkedList<AndOrTree>) a.getChildren();
                 if (a.getLeftChild() != null) {
-                    while (childs.size() > 0) {
+                    while (!childs.isEmpty()) {
                         childsCoordinates.addLast(dibujarArbol(g, 
                                 childs.getFirst(), y + 2, tam, f));
                         childs.removeFirst();
-                        x++;
+                        nodesPosition++;
                     }
-                    x--;
-                    childs = a.getChildren();
+                    nodesPosition--;
+                    childs = (LinkedList<AndOrTree>) a.getChildren();
                     if ((childsCoordinates.size() % 2) != 0) {
                         position = childsCoordinates
                                 .get((childsCoordinates.size() / 2));
@@ -103,7 +102,7 @@ public class TreeCanvas extends JPanel{
                                 - childsCoordinates.getFirst()) / 2)
                                 + childsCoordinates.getFirst());
                     }
-                    while (childsCoordinates.size() > 0) {
+                    while (!childsCoordinates.isEmpty()) {
                         g.setColor(Color.BLACK);
                         g.drawLine(position * tam, y * tam, 
                                 childsCoordinates.getFirst() * tam, (y + 2) * tam);
@@ -192,7 +191,7 @@ public class TreeCanvas extends JPanel{
                         childsCoordinates.removeFirst();
                     }
                 }
-                area = x;
+                area = nodesPosition;
                 return position;
             }
 }

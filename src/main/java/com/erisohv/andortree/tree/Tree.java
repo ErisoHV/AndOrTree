@@ -1,6 +1,7 @@
 package main.java.com.erisohv.andortree.tree;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A simple Tree structure
@@ -11,13 +12,17 @@ public class Tree<T> {
     private Tree leftChild;
     private Tree rightChild;
     
+    public static final String INORDER = "INORDER";
+    public static final String PREORDER = "PREORDER";
+    public static final String POSTORDER = "POSTORDER";
+    
     /**
      * Empty constructor
      * @param contentNode content of the node
      * @param leftChild left child of the node
      * @param rightChild right child of the node
      */
-    public Tree(T contentNode, Tree leftChild, Tree rightChild) {
+    public Tree(T contentNode, Tree<T> leftChild, Tree<T> rightChild) {
         this.content = contentNode;
         this.leftChild = leftChild;
         this.rightChild = rightChild;
@@ -52,7 +57,7 @@ public class Tree<T> {
      * 
      * @return the left child of the AndOrTree
      */
-    public Tree getLeftChild() {		//Retorna el hijo izquierdo de una taskName
+    public Tree<T> getLeftChild() {
         return leftChild;
     }
 
@@ -60,7 +65,7 @@ public class Tree<T> {
      * 
      * @return the right child of the AndOrTree
      */
-    public Tree getRightChild() {		//Retorna el hijo derecho de una taskName
+    public Tree<T> getRightChild() {
         return rightChild;
     }
     
@@ -68,7 +73,7 @@ public class Tree<T> {
      * Set the left child of the AndOrTree
      * @param tree 
      */
-    public void setLeftChild(Tree tree) {		//Modifica el hijo izq de una taskName
+    public void setLeftChild(Tree<T> tree) {
         leftChild = tree;
     }
 
@@ -76,7 +81,7 @@ public class Tree<T> {
      * Set the right child of the AndOrTree
      * @param tree 
      */
-    public void setRightChild(Tree tree) {       //Modifica el hijo derech de una taskName
+    public void setRightChild(Tree tree) {
         rightChild = tree;
     }
     
@@ -84,9 +89,9 @@ public class Tree<T> {
      * 
      * @return return all the children of the AndOrTree
      */
-    public LinkedList<Tree> getChildren() {
+    public List<Tree> getChildren() {
         LinkedList<Tree> laux = new LinkedList<>();
-        Tree arb;
+        Tree<T> arb;
         if (leftChild != null) {
             arb = leftChild;
             while (arb != null) {
@@ -102,9 +107,9 @@ public class Tree<T> {
      * @param nodeContent Node content
      * @return A Node
      */
-    public Tree getNode(T nodeContent) {
-        Tree aux = null;
-        Tree node = null;
+    public Tree<T> getNode(T nodeContent) {
+        Tree<T> aux = null;
+        Tree<T> node = null;
         if (content.equals(nodeContent)) {
             return this;
         } else {
@@ -124,7 +129,7 @@ public class Tree<T> {
      * @param nodeList node content list
      */
     public void preorder(LinkedList<Tree> nodeList) {
-        Tree aux = null;
+        Tree<T> aux = null;
         nodeList.addLast(this);
         if (leftChild != null) {
             aux = leftChild;
@@ -139,8 +144,8 @@ public class Tree<T> {
      * Inorder route
      * @param nodeList node content list
      */
-    public void inorder(LinkedList<Tree> nodeList) {		//Recorrido inorder del Arbol
-        Tree aux = null;
+    public void inorder(LinkedList<Tree> nodeList) {
+        Tree<T> aux = null;
         if (leftChild != null) {
             aux = leftChild;
             aux.inorder(nodeList);
@@ -159,8 +164,8 @@ public class Tree<T> {
      * Postorder route
      * @param nodeList node content list
      */
-    public void postorder(LinkedList<Tree>  nodeList) {		//Recorrido prostorden del Arbol
-        Tree aux = null;
+    public void postorder(LinkedList<Tree>  nodeList) {
+        Tree<T> aux = null;
         if (leftChild != null) {
             aux = leftChild;
             while (aux != null) {
@@ -177,7 +182,7 @@ public class Tree<T> {
      */
     public int getLeafCount() {
         int cont = 0;
-        Tree aux;
+        Tree<T> aux;
         if (leftChild != null) {
             aux = leftChild;
             while (aux != null) {
@@ -195,8 +200,8 @@ public class Tree<T> {
      * @param nodeList leafs list
      * @return leafs
      */
-    public void getLeafs(LinkedList<T>  nodeList) {
-        Tree aux;
+    public void getLeafs(List<T>  nodeList) {
+        Tree<T> aux;
         if (leftChild != null) {
             aux = leftChild;
             while (aux != null) {
@@ -215,12 +220,11 @@ public class Tree<T> {
      * @return True if is a Leaf
      */
     public boolean isLeaf(T nodeContent) {
-        Tree aux = null;
+        Tree<T> aux = null;
         boolean val = false;
         if (getLeftChild() != null) {
             aux = leftChild;
-            val = false;
-            while ((val == false) && (aux != null)) {
+            while (!val && (aux != null)) {
                 val = aux.isLeaf(nodeContent);
                 aux = aux.getRightChild();
             }
@@ -232,7 +236,5 @@ public class Tree<T> {
         }
         return val;
     }
-
-
 
 }

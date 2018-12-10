@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -27,6 +26,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
+import main.java.com.erisohv.andortree.tree.Tree;
 import main.java.com.erisohv.andortree.ui.helper.TreeStructureLoader;
 import main.java.com.erisohv.andortree.ui.helper.TreeWindow;
 
@@ -52,17 +52,16 @@ public class UIInterface extends JFrame {
     
     TreeWindow treeWindow = new TreeWindow(treeStructure);
     //Messages
-    private final String FILE_ERROR = "The file does not exist";
-    private final String EMPTY_TREE = "You must load a tree before "
-            + "performing an operation";
-    private final String ATOMIC_COUNT = "The number of atomic tasks executed is: {0}";
-    private final String ATOMIC_TASK = "The selected task is not an atomic task";
-    private final String DO_TASK = "Select the ID of the task to perform:";
-    private final String UNDO_TASK = "Enter the ID of the task that you want to undo:";
-    private final String ATOMIC_MINIMUM = "The atomic minimum is: {0}";
-    private final String REPORT = "Please select the tree traversal:";
-    private final String REPORT_ERROR = "Could not create the file: {0}";
-    private final String REPORT_OK = "The file: {0} was created successfully";
+    private static final String FILE_ERROR = "The file does not exist";
+    private static final String EMPTY_TREE = "You must load a tree before performing an operation";
+    private static final String ATOMIC_COUNT = "The number of atomic tasks executed is: {0}";
+    private static final String ATOMIC_TASK = "The selected task is not an atomic task";
+    private static final String DO_TASK = "Select the ID of the task to perform:";
+    private static final String UNDO_TASK = "Enter the ID of the task that you want to undo:";
+    private static final String ATOMIC_MINIMUM = "The atomic minimum is: {0}";
+    private static final String REPORT = "Please select the tree traversal:";
+    private static final String REPORT_ERROR = "Could not create the file: {0}";
+    private static final String REPORT_OK = "The file: {0} was created successfully";
     
      public UIInterface() {
         super("AND - OR Tree");
@@ -124,7 +123,7 @@ public class UIInterface extends JFrame {
         undoAtomicButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               UndoAtomicTaskActions();
+               undoAtomicTaskActions();
             }
         });
         
@@ -174,27 +173,18 @@ public class UIInterface extends JFrame {
          open.setCurrentDirectory(workingDirectory);
          
          int retval = open.showOpenDialog(null);
+
          if (retval == JFileChooser.APPROVE_OPTION) {
-             try {
-                 File name = open.getSelectedFile();
-                 BufferedReader input = new BufferedReader(new FileReader(name));
-                 if (name.exists()) {
-                     if(treeStructure.readTree(input)){
-                         showTreeActions();
-                         enableOperations(true);
-                     }
-                     input.close();
+        	 File name = open.getSelectedFile();
+             try (BufferedReader input = new BufferedReader(new FileReader(name))) {
+                 if (name.exists() && treeStructure.readTree(input)) {
+                     showTreeActions();
+                     enableOperations(true);
                  }
-                 
-             } catch (FileNotFoundException ex) {
-                 JOptionPane.showMessageDialog(null, FILE_ERROR,
-                            "Error", JOptionPane.ERROR_MESSAGE);
+             } catch (IOException ex) {
+                 JOptionPane.showMessageDialog(null, FILE_ERROR, "Error", JOptionPane.ERROR_MESSAGE);
                  Logger.getLogger(UIInterface.class.getName()).log(Level.SEVERE, null, ex);
-             }  catch (IOException ex) {
-                     JOptionPane.showMessageDialog(null, FILE_ERROR,
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                     Logger.getLogger(UIInterface.class.getName()).log(Level.SEVERE, null, ex);
-                 }
+             } 
          }
     }
     
@@ -217,7 +207,7 @@ public class UIInterface extends JFrame {
         }
     }
     
-     public void UndoAtomicTaskActions() {
+     public void undoAtomicTaskActions() {
          if (checkTree()) {
              String task = showOptionPane(UNDO_TASK, 
                     treeStructure.getAtomicTasks().toArray());
@@ -240,13 +230,13 @@ public class UIInterface extends JFrame {
     private boolean reportTreeActions(){
        if (checkTree()) {
             String traversal = showOptionPane(REPORT, 
-                    new Object[]{TreeStructureLoader.INORDER,
-                    TreeStructureLoader.POSTORDER, 
-                    TreeStructureLoader.PREORDER});
+                    new Object[]{Tree.INORDER,
+                    Tree.POSTORDER, 
+                    Tree.PREORDER});
             DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
                     
             String name = traversal + "_" + dateFormat.format(new Date()) + ".out";
-            if (name != null && !name.isEmpty()) {
+            if (!name.isEmpty()) {
                 try {
                     FileWriter fw = new FileWriter(name);
                     try (BufferedWriter output
@@ -291,11 +281,8 @@ public class UIInterface extends JFrame {
     
     private String showOptionPane(String msg, Object[] options){
         JFrame frame = new JFrame();
-        String id = (String) JOptionPane.showInputDialog(frame, msg, "",
-        JOptionPane.QUESTION_MESSAGE, null, 
-        options, 
-        options[0]);
-        return id;
+        return (String) JOptionPane.showInputDialog(frame, msg, "", JOptionPane.QUESTION_MESSAGE, null, 
+                options, options[0]);
     }
     
 }
