@@ -1,7 +1,5 @@
-package UIInterface;
+package main.java.com.erisohv.andortree.ui.windows;
 
-import UIHelper.TreeStructureLoader;
-import UIHelper.TreeWindow;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -27,6 +26,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
+
+import main.java.com.erisohv.andortree.ui.helper.TreeStructureLoader;
+import main.java.com.erisohv.andortree.ui.helper.TreeWindow;
 
 public class UIInterface extends JFrame {
 

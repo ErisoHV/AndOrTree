@@ -8,3 +8,8 @@ manifest.mf
 project.properties
 *.out
 *.txt
+/bin/
+/target/
+/.classpath/
+/.project/
+/.settings/

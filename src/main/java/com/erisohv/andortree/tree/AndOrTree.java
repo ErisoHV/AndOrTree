@@ -1,7 +1,6 @@
-package andortree;
+package main.java.com.erisohv.andortree.tree;
 
 import java.util.LinkedList;
-import tree.Tree;
 /**
  * ADN-OR tree is an n-ary tree used to represent knowledge about 
  * groups of tasks to be executed to achieve some goal.<br/>
