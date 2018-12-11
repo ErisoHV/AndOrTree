@@ -9,8 +9,8 @@ import java.util.List;
  */
 public class Tree<T> {
     private T content;
-    private Tree leftChild;
-    private Tree rightChild;
+    private Tree<T> leftChild;
+    private Tree<T> rightChild;
     
     public static final String INORDER = "INORDER";
     public static final String PREORDER = "PREORDER";
@@ -81,7 +81,7 @@ public class Tree<T> {
      * Set the right child of the AndOrTree
      * @param tree 
      */
-    public void setRightChild(Tree tree) {
+    public void setRightChild(Tree<T> tree) {
         rightChild = tree;
     }
     
@@ -128,13 +128,13 @@ public class Tree<T> {
      * Preorder route
      * @param nodeList node content list
      */
-    public void preorder(LinkedList<Tree> nodeList) {
+    public void preOrderWalking(LinkedList<Tree> nodeList) {
         Tree<T> aux = null;
         nodeList.addLast(this);
         if (leftChild != null) {
             aux = leftChild;
             while (aux != null) {
-                aux.preorder(nodeList);
+                aux.preOrderWalking(nodeList);
                 aux = aux.getRightChild();
             }
         }
@@ -144,15 +144,15 @@ public class Tree<T> {
      * Inorder route
      * @param nodeList node content list
      */
-    public void inorder(LinkedList<Tree> nodeList) {
+    public void inOrderWalking(LinkedList<Tree> nodeList) {
         Tree<T> aux = null;
         if (leftChild != null) {
             aux = leftChild;
-            aux.inorder(nodeList);
+            aux.inOrderWalking(nodeList);
             aux = aux.getRightChild();
             nodeList.addLast(this);
             while (aux != null) {
-                aux.inorder(nodeList);
+                aux.inOrderWalking(nodeList);
                 aux = aux.getRightChild();
             }
         } else {
@@ -164,12 +164,12 @@ public class Tree<T> {
      * Postorder route
      * @param nodeList node content list
      */
-    public void postorder(LinkedList<Tree>  nodeList) {
+    public void postOrderWalking(LinkedList<Tree>  nodeList) {
         Tree<T> aux = null;
         if (leftChild != null) {
             aux = leftChild;
             while (aux != null) {
-                aux.postorder(nodeList);
+                aux.postOrderWalking(nodeList);
                 aux = aux.getRightChild();
             }
         }

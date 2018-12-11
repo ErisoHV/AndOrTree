@@ -2,6 +2,7 @@ package main.java.com.erisohv.andortree.ui.helper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -16,8 +17,11 @@ import main.java.com.erisohv.andortree.tree.Tree;
  *
  * @author ErisoHV
  */
-public class TreeStructureLoader{
-    private LinkedList<String> treeStructure = new LinkedList<>();
+public class TreeStructureLoader implements Serializable{
+
+	private static final long serialVersionUID = 1545709122520670548L;
+	
+	private LinkedList<String> treeStructure = new LinkedList<>();
     private AndOrTree tree = new AndOrTree();
     private LinkedList<String> atomicTasks = new LinkedList<>();
     private int atomicMinimun;
@@ -94,7 +98,7 @@ public class TreeStructureLoader{
     
     public void doUndoAtomicTask(String task, boolean isExec){
         tree.setExecuteValue(task, isExec);
-        //refresk the atomic minimum
+        //refresh the atomic minimum
         atomicMinimun = tree.getAtomicMinimum();
     }
     
@@ -103,9 +107,9 @@ public class TreeStructureLoader{
        LinkedList<AndOrTree> pre = new LinkedList<>();
        
        switch(traversal){
-           case Tree.INORDER: tree.inorder(pre); break;
-               case Tree.POSTORDER: tree.postorder(pre); break;
-                   case Tree.PREORDER: tree.preorder(pre); break;
+           case Tree.INORDER: tree.inOrderWalking(pre); break;
+               case Tree.POSTORDER: tree.postOrderWalking(pre); break;
+                   case Tree.PREORDER: tree.preOrderWalking(pre); break;
            default: break;
        }
        if (!pre.isEmpty()){

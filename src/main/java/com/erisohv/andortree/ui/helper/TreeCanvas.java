@@ -15,16 +15,19 @@ import main.java.com.erisohv.andortree.tree.AndOrTree;
  * @author ErisoHV
  */
 public class TreeCanvas extends JPanel{
-    private Integer nodesPosition = 1;
+	
+	private static final long serialVersionUID = -8487039720611456232L;
+	
+	private Integer nodesPosition = 1;
     private Integer area = 1;
     private static final Font FONT = new Font("Arial Bold", Font.BOLD, 12);
     private static final int NODE_DISTANCE = 35;
     
-    TreeStructureLoader treeStructure = new TreeStructureLoader();
+    private TreeStructureLoader treeStructure = new TreeStructureLoader();
     
     public TreeCanvas(TreeStructureLoader tree){
         setSize(2000, 2000);
-        treeStructure = tree;
+        this.treeStructure = tree;
         this.setBackground(Color.LIGHT_GRAY);
         repaint();
     }
@@ -64,53 +67,53 @@ public class TreeCanvas extends JPanel{
     }
   
     @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    public void paintComponent(Graphics graphics) {
+        super.paintComponent(graphics);
         Integer y = 1;
-        g.translate(this.getInsets().left, this.getInsets().top);
-        int i = drawTree(g, treeStructure.getAndOrTree(), y, NODE_DISTANCE, FONT);
+        graphics.translate(this.getInsets().left, this.getInsets().top);
+        int i = drawTree(graphics, treeStructure.getAndOrTree(), y, NODE_DISTANCE, FONT);
         nodesPosition = 1;
         if (treeStructure.getAndOrTree().isExecuted()) {
-           drawRootExecutedTask(i, g, y);
+           drawRootExecutedTask(i, graphics, y);
         } else {
-           drawRootNotExecutedTask(i, g, y);
+           drawRootNotExecutedTask(i, graphics, y);
         }
         setPreferredSize(new Dimension((area + 2) * NODE_DISTANCE, area * NODE_DISTANCE));
      }
     
     private void drawExecutedTask(LinkedList<AndOrTree> childs, LinkedList<Integer> childsCoordinates,
-    		Graphics g, Font f, Integer tam, Integer y){
-    	g.setColor(Color.BLACK);
+    		Graphics graphics, Font f, Integer tam, Integer y){
+    	graphics.setColor(Color.BLACK);
         if (childs.getFirst().getLeftChild() == null) {
-            g.fillOval((childsCoordinates.getFirst() * tam) - 10, (y + 2) * tam - 10, 21, 21);
-            g.setFont(f);
-            g.setColor(Color.BLACK);
-            g.drawOval((childsCoordinates.getFirst() * tam) - 10,
+            graphics.fillOval((childsCoordinates.getFirst() * tam) - 10, (y + 2) * tam - 10, 21, 21);
+            graphics.setFont(f);
+            graphics.setColor(Color.BLACK);
+            graphics.drawOval((childsCoordinates.getFirst() * tam) - 10,
                     (y + 2) * tam - 10, 20, 20);
-            g.drawString(childs.getFirst().getContent().toString(),
+            graphics.drawString(childs.getFirst().getContent().toString(),
                     (childsCoordinates.getFirst() * tam) - 11,
                     (y + 2) * tam + 25);
         } else {
             if (childs.getFirst().isAndTask()) {
-                g.fillOval((childsCoordinates.getFirst() * tam) - 15, (y + 2) * tam - 15, 31, 31);
-                g.setColor(Color.BLACK);
-                g.drawOval((childsCoordinates.getFirst() * tam)
+                graphics.fillOval((childsCoordinates.getFirst() * tam) - 15, (y + 2) * tam - 15, 31, 31);
+                graphics.setColor(Color.BLACK);
+                graphics.drawOval((childsCoordinates.getFirst() * tam)
                         - 15, (y + 2) * tam - 15, 30, 30);
-                g.setColor(Color.WHITE);
-                g.setFont(f);
-                g.drawString(childs.getFirst().getContent()
+                graphics.setColor(Color.WHITE);
+                graphics.setFont(f);
+                graphics.drawString(childs.getFirst().getContent()
                         .toString(), 
                         (childsCoordinates.getFirst() * tam) 
                                 - 11, (y + 2) * tam + 5);
             } else {
-                g.fillRect((childsCoordinates.getFirst() 
+                graphics.fillRect((childsCoordinates.getFirst() 
                         * tam - 18), (y + 2) * tam - 13, 36, 26);
-                g.setColor(Color.BLACK);
-                g.drawRect((childsCoordinates.getFirst() 
+                graphics.setColor(Color.BLACK);
+                graphics.drawRect((childsCoordinates.getFirst() 
                         * tam - 18), (y + 2) * tam - 13, 36, 26);
-                g.setFont(f);
-                g.setColor(Color.WHITE);
-                g.drawString(childs.getFirst().getContent()
+                graphics.setFont(f);
+                graphics.setColor(Color.WHITE);
+                graphics.drawString(childs.getFirst().getContent()
                         .toString(), 
                         (childsCoordinates.getFirst() * tam) - 11,
                         (y + 2) * tam + 5);
@@ -119,52 +122,52 @@ public class TreeCanvas extends JPanel{
     }
     
     private void drawNotExecutedTask(LinkedList<AndOrTree> childs, LinkedList<Integer> childsCoordinates,
-    		Graphics g, Font f, Integer tam, Integer y){
-    	g.setColor(Color.WHITE);
+    		Graphics graphics, Font f, Integer tam, Integer y){
+    	graphics.setColor(Color.WHITE);
         if (childs.getFirst().getLeftChild() == null) {
-            g.fillOval((childsCoordinates.getFirst() * tam) - 10,
+            graphics.fillOval((childsCoordinates.getFirst() * tam) - 10,
                     (y + 2) * tam - 10, 21, 21);
-            g.setFont(f);
-            g.setColor(Color.BLACK);
-            g.drawOval((childsCoordinates.getFirst() * tam) - 10,
+            graphics.setFont(f);
+            graphics.setColor(Color.BLACK);
+            graphics.drawOval((childsCoordinates.getFirst() * tam) - 10,
                     (y + 2) * tam - 10, 20, 20);
-            g.drawString(childs.getFirst().getContent().toString(),
+            graphics.drawString(childs.getFirst().getContent().toString(),
                     (childsCoordinates.getFirst() * tam) - 11,
                     (y + 2) * tam + 25);
         } else {
             if (childs.getFirst().isAndTask()) {
-                g.fillOval((childsCoordinates.getFirst() * tam) - 15,
+                graphics.fillOval((childsCoordinates.getFirst() * tam) - 15,
                         (y + 2) * tam - 15, 31, 31);
-                g.setColor(Color.BLACK);
-                g.drawOval((childsCoordinates.getFirst() * tam) - 15,
+                graphics.setColor(Color.BLACK);
+                graphics.drawOval((childsCoordinates.getFirst() * tam) - 15,
                         (y + 2) * tam - 15, 30, 30);
-                g.setFont(f);
-                g.setColor(Color.BLACK);
-                g.drawString(childs.getFirst().getContent().toString(),
+                graphics.setFont(f);
+                graphics.setColor(Color.BLACK);
+                graphics.drawString(childs.getFirst().getContent().toString(),
                         (childsCoordinates.getFirst() * tam) - 11,
                         (y + 2) * tam + 5);
             } else {
-                g.fillRect((childsCoordinates.getFirst() * tam - 18),
+                graphics.fillRect((childsCoordinates.getFirst() * tam - 18),
                         (y + 2) * tam - 13, 36, 26);
-                g.setColor(Color.BLACK);
-                g.drawRect((childsCoordinates.getFirst() * tam - 18),
+                graphics.setColor(Color.BLACK);
+                graphics.drawRect((childsCoordinates.getFirst() * tam - 18),
                         (y + 2) * tam - 13, 36, 26);
-                g.setFont(f);
-                g.setColor(Color.BLACK);
-                g.drawString(childs.getFirst().getContent().toString(),
+                graphics.setFont(f);
+                graphics.setColor(Color.BLACK);
+                graphics.drawString(childs.getFirst().getContent().toString(),
                         (childsCoordinates.getFirst() * tam) - 11, 
                         (y + 2) * tam + 5);
             }
         }
     }
     
-    private Integer drawTree(Graphics g, AndOrTree a, Integer y, Integer tam, Font f) {
+    private Integer drawTree(Graphics graphics, AndOrTree a, Integer y, Integer tam, Font f) {
         LinkedList<Integer> childsCoordinates = new LinkedList<>();
         Integer position = nodesPosition;
         LinkedList<AndOrTree> childs = (LinkedList<AndOrTree>) a.getChildren();
         if (a.getLeftChild() != null) {
             while (!childs.isEmpty()) {
-                childsCoordinates.addLast(drawTree(g, childs.getFirst(), y + 2, tam, f));
+                childsCoordinates.addLast(drawTree(graphics, childs.getFirst(), y + 2, tam, f));
                 childs.removeFirst();
                 nodesPosition++;
             }
@@ -177,12 +180,12 @@ public class TreeCanvas extends JPanel{
                         + childsCoordinates.getFirst());
             }
             while (!childsCoordinates.isEmpty()) {
-                g.setColor(Color.BLACK);
-                g.drawLine(position * tam, y * tam, childsCoordinates.getFirst() * tam, (y + 2) * tam);
+                graphics.setColor(Color.BLACK);
+                graphics.drawLine(position * tam, y * tam, childsCoordinates.getFirst() * tam, (y + 2) * tam);
                 if (childs.getFirst().isExecuted()) {
-                	drawExecutedTask(childs, childsCoordinates, g, f, tam, y);
+                	drawExecutedTask(childs, childsCoordinates, graphics, f, tam, y);
                 } else {
-                	drawNotExecutedTask(childs, childsCoordinates, g, f, tam, y);
+                	drawNotExecutedTask(childs, childsCoordinates, graphics, f, tam, y);
                 }
                 childs.removeFirst();
                 childsCoordinates.removeFirst();

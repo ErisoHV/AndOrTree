@@ -31,27 +31,24 @@ import main.java.com.erisohv.andortree.tree.Tree;
 import main.java.com.erisohv.andortree.ui.helper.TreeStructureLoader;
 import main.java.com.erisohv.andortree.ui.helper.TreeWindow;
 
-public class UIInterface extends JFrame {
+public class UIInterface {
+	
+	private JFrame window;
+	private JMenuItem openOption = new JMenuItem("Open");
+    private JButton countAtomicButton = new JButton("Atomic count");
+    private JButton doAtomicButton = new JButton("Do Atomic task");
+    private JButton undoAtomicButton = new JButton("Undo Atomic task");
+    private JButton minAtomicButton = new JButton("Atomic minimum");
+    private JButton showTree = new JButton("Show tree");
+    private JButton treeReportButton = new JButton("Print tasks report");
 
-    JMenuBar menubar = new JMenuBar();
-    JMenu menu1 = new JMenu("File");
-    JMenuItem openOption = new JMenuItem("Open");
+    private Box horizontal1 = Box.createHorizontalBox();
+    private Box horizontal2 = Box.createHorizontalBox();
+    private JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
 
-    JButton countAtomicButton = new JButton("Atomic count");
-    JButton doAtomicButton = new JButton("Do Atomic task");
-    JButton undoAtomicButton = new JButton("Undo Atomic task");
-    JButton minAtomicButton = new JButton("Atomic minimum");
-    JButton showTree = new JButton("Show tree");
-    JButton treeReportButton = new JButton("Print tasks report");
-
-    Box horizontal1 = Box.createHorizontalBox();
-    Box horizontal2 = Box.createHorizontalBox();
-    JTabbedPane tabs = new JTabbedPane(
-            JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
-
-    TreeStructureLoader treeStructure = new TreeStructureLoader();
+    private TreeStructureLoader treeStructure = new TreeStructureLoader();
     
-    TreeWindow treeWindow = new TreeWindow(treeStructure);
+    private TreeWindow treeWindow = new TreeWindow(treeStructure);
     //Messages
     private static final String FILE_ERROR = "The file does not exist";
     private static final String EMPTY_TREE = "You must load a tree before performing an operation";
@@ -67,10 +64,13 @@ public class UIInterface extends JFrame {
     private static final Logger logger = LogManager.getLogger(UIInterface.class);
     
      public UIInterface() {
-        super("AND - OR Tree");
+        window = new JFrame("AND - OR Tree");
+        JMenuBar menubar = new JMenuBar();
+        JMenu menu1 = new JMenu("File");
+        
         menubar.add(menu1);
         menu1.add(openOption);
-        setJMenuBar(menubar);     
+        window.setJMenuBar(menubar);     
 
         horizontal1.add(Box.createHorizontalGlue());
         horizontal1.add(countAtomicButton);
@@ -89,19 +89,23 @@ public class UIInterface extends JFrame {
 
         tabs.addTab("Atomic Tasks", horizontal1);
         tabs.addTab("Results", horizontal2);
-        this.add(tabs, BorderLayout.CENTER);
+        window.add(tabs, BorderLayout.CENTER);
         
         enableOperations(false);
         
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setSize(550, 350);
-        setVisible(true);
-        setLocationRelativeTo(null);
-        init();
+        window.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        window.setSize(550, 350);
+       
+        window.setLocationRelativeTo(null);
+        initListeners();
+    }
+     
+    public void open(){
+    	if (window != null)
+    		window.setVisible(true);
     }
 
-     private void init(){
-         //Actions
+     private void initListeners(){
         openOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

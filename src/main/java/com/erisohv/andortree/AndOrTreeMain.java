@@ -8,7 +8,8 @@ import main.java.com.erisohv.andortree.ui.windows.UIInterface;
  */
 public class AndOrTreeMain {
     public static void main(String[] args) {
-        UIInterface ventana = new UIInterface();
+        UIInterface window = new UIInterface();
+        window.open();
         
     }
     

@@ -16,19 +16,20 @@ import javax.swing.WindowConstants;
  *
  * @author Erika
  */
-public class TreeWindow extends JFrame{
+public class TreeWindow {
+	private JFrame window;
     JButton refresh = new JButton("Refresh Tree");
     JLabel info = new JLabel("Press \"Refresh Tree\" to view the tasks performed recently");
     TreeCanvas canvas;
     JScrollPane scroll;
 
     public TreeWindow(TreeStructureLoader tree){
-        setTitle("Print tree");
-        setSize(800, 550);
+    	window = new JFrame("Print tree");
+        window.setSize(800, 550);
         canvas = new TreeCanvas(tree);
         scroll = new JScrollPane(canvas);
         scroll.setPreferredSize(new Dimension(100, 100));
-        setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        window.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         init();
     }
     
@@ -36,18 +37,18 @@ public class TreeWindow extends JFrame{
         refresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               repaint();
+               window.repaint();
             }
         });
         scroll.getHorizontalScrollBar().addAdjustmentListener(new RefreshScroll());
         scroll.getVerticalScrollBar().addAdjustmentListener(new RefreshScroll());
-        add(refresh, BorderLayout.NORTH);
-        add(scroll, BorderLayout.CENTER);
-        add(info, BorderLayout.SOUTH);
+        window.add(refresh, BorderLayout.NORTH);
+        window.add(scroll, BorderLayout.CENTER);
+        window.add(info, BorderLayout.SOUTH);
     }
     
     public void showWindow(){
-        setVisible(true);
+    	window.setVisible(true);
     }
     
     public void setTreeStructure(TreeStructureLoader tree){
@@ -55,20 +56,24 @@ public class TreeWindow extends JFrame{
     }
     
     public void refreshTreeWindow(){
-        repaint();
+    	window.repaint();
+    }
+    
+    public boolean isShowing(){
+    	return window.isShowing();
     }
     
     class RefreshWindow implements ActionListener { 
         @Override
         public void actionPerformed(ActionEvent ae) {
-            repaint();
+        	window.repaint();
         }
     }
 
     public class RefreshScroll implements AdjustmentListener{
        @Override
        public void adjustmentValueChanged(AdjustmentEvent e){
-              repaint();
+    	   window.repaint();
        }
     }
     
