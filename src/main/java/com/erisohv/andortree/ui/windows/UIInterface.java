@@ -13,8 +13,6 @@ import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -25,6 +23,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import main.java.com.erisohv.andortree.tree.Tree;
 import main.java.com.erisohv.andortree.ui.helper.TreeStructureLoader;
@@ -62,6 +63,8 @@ public class UIInterface extends JFrame {
     private static final String REPORT = "Please select the tree traversal:";
     private static final String REPORT_ERROR = "Could not create the file: {0}";
     private static final String REPORT_OK = "The file: {0} was created successfully";
+    
+    private static final Logger logger = LogManager.getLogger(UIInterface.class);
     
      public UIInterface() {
         super("AND - OR Tree");
@@ -182,24 +185,21 @@ public class UIInterface extends JFrame {
                      enableOperations(true);
                  }
              } catch (IOException ex) {
-                 JOptionPane.showMessageDialog(null, FILE_ERROR, "Error", JOptionPane.ERROR_MESSAGE);
-                 Logger.getLogger(UIInterface.class.getName()).log(Level.SEVERE, null, ex);
+            	 showErrorDialog(FILE_ERROR);
+                 logger.error("UIInterface -> openActions", ex);
              } 
          }
     }
     
     private void countAtomicActions(){
         if (checkTree()){
-          JOptionPane.showMessageDialog(null, 
-                  MessageFormat.format(ATOMIC_COUNT, 
-                          treeStructure.getAndOrTree().getLeafCount()));
+          showInfoDialog(MessageFormat.format(ATOMIC_COUNT, treeStructure.getAndOrTree().getLeafCount()), "");
         }
     }
     
     private void doAtomicTaskActions(){
         if (checkTree()) {
-            String task = showOptionPane(DO_TASK, 
-                    treeStructure.getAtomicTasks().toArray());
+            String task = showOptionPane(DO_TASK, treeStructure.getAtomicTasks().toArray());
             if (task != null && !task.isEmpty() && checkIsLeaf(task)) {
                treeStructure.doUndoAtomicTask(task, true);
                treeWindow.refreshTreeWindow();
@@ -209,8 +209,7 @@ public class UIInterface extends JFrame {
     
      public void undoAtomicTaskActions() {
          if (checkTree()) {
-             String task = showOptionPane(UNDO_TASK, 
-                    treeStructure.getAtomicTasks().toArray());
+             String task = showOptionPane(UNDO_TASK, treeStructure.getAtomicTasks().toArray());
              if (task != null && !task.isEmpty() && checkIsLeaf(task)) {
                  treeStructure.doUndoAtomicTask(task, false);
                  treeWindow.refreshTreeWindow();
@@ -220,10 +219,7 @@ public class UIInterface extends JFrame {
      
     private void getAtomicMinimumActions() {
         if (checkTree()) {
-            JOptionPane.showMessageDialog(null,
-                    MessageFormat.format(ATOMIC_MINIMUM, 
-                            treeStructure.getAtomicMinimum()),
-                    "Atomic Minimum", JOptionPane.INFORMATION_MESSAGE);
+        	showInfoDialog(MessageFormat.format(ATOMIC_MINIMUM, treeStructure.getAtomicMinimum()), "Atomic Minimum");
         }
     }
     
@@ -243,16 +239,12 @@ public class UIInterface extends JFrame {
                             = new BufferedWriter(new BufferedWriter(fw))) {
                         StringBuilder out = treeStructure.reportTree(traversal);
                         output.write(out.toString());
-                        JOptionPane.showMessageDialog(null, MessageFormat
-                            .format(REPORT_OK, name),
-                            "", JOptionPane.INFORMATION_MESSAGE);
+                        showInfoDialog(MessageFormat.format(REPORT_OK, name), "");
                         return true;
                     }
                 } catch (IOException ioException) {
-                    System.out.println(ioException.getCause());
-                    JOptionPane.showMessageDialog(null, MessageFormat
-                            .format(REPORT_ERROR, name),
-                            "Error", JOptionPane.WARNING_MESSAGE);
+                    logger.error("reportTreeActions", ioException);
+                    showWarningDialog(MessageFormat.format(REPORT_ERROR, name));
                 }
             }
         }
@@ -263,18 +255,15 @@ public class UIInterface extends JFrame {
         if (!treeStructure.getAndOrTree().isEmpty()) {
             return true;
         } 
-       
-         JOptionPane.showMessageDialog(null, EMPTY_TREE, "Error", 
-                 JOptionPane.ERROR_MESSAGE);
-         return false;
+        showErrorDialog(EMPTY_TREE);
+        return false;
     }
     
     private boolean checkIsLeaf(String task){
         if (treeStructure.getAndOrTree().isLeaf(task)) {
             return true;
         }
-        JOptionPane.showMessageDialog(null, ATOMIC_TASK,
-                    "Error", JOptionPane.ERROR_MESSAGE);
+        showErrorDialog(ATOMIC_TASK);
         return false;
         
     }
@@ -283,6 +272,18 @@ public class UIInterface extends JFrame {
         JFrame frame = new JFrame();
         return (String) JOptionPane.showInputDialog(frame, msg, "", JOptionPane.QUESTION_MESSAGE, null, 
                 options, options[0]);
+    }
+    
+    private void showErrorDialog(String message){
+    	JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    private void showWarningDialog(String message){
+    	JOptionPane.showMessageDialog(null, message, "Warning", JOptionPane.WARNING_MESSAGE);
+    }
+    
+    private void showInfoDialog(String message, String title){
+    	 JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
     
 }

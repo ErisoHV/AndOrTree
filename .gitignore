@@ -13,3 +13,5 @@ project.properties
 .classpath
 .project
 .settings
+/logs/
+*.log

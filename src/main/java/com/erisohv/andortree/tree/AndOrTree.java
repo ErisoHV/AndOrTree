@@ -132,13 +132,12 @@ public class AndOrTree extends Tree{
      * @param treeStructure Parenthetical notation 
      */
     public void createAndOrTree(LinkedList<String> treeStructure) {		
-        String b;
         AndOrTree aux;
         AndOrTree inic;
         LinkedList<AndOrTree> laux = new LinkedList<>();
         setContent("");
         treeStructure.remove();
-        b = treeStructure.getFirst();
+        String b = treeStructure.getFirst();
         treeStructure.remove();
         while ((!b.equals(COMMA)) && (!b.equals(RIGHTPARENTHESIS))) {
             setContent(getContent() + b);
@@ -178,7 +177,7 @@ public class AndOrTree extends Tree{
         AndOrTree aux;
         String type = "";
         if (getContent().toString().equals(taskname)) {
-            return andTask?AND:OR;
+            return getTaskType();
         } else {
             if (getLeftChild() != null) {
                 aux = (AndOrTree) getLeftChild();
@@ -192,7 +191,7 @@ public class AndOrTree extends Tree{
     }
     
     public String getTaskType(){
-        return andTask?AND:OR;
+        return andTask ? AND : OR;
     }
 
     /**
@@ -354,9 +353,8 @@ public class AndOrTree extends Tree{
     public int getAtomicMinimum() {
         int cont1 = 0;
         int cont2 = 0;
-        AndOrTree aux;
-        aux = (AndOrTree) getLeftChild();
-        if ((andTask || orTask) && !isExecuted) {
+        AndOrTree aux = (AndOrTree) getLeftChild();
+        if (isTaskToExecute() && !isExecuted) {
                 if (aux != null) {
                     if (andTask) {
                         while (aux != null) {
@@ -378,6 +376,10 @@ public class AndOrTree extends Tree{
                 }
         }
         return cont1;
+    }
+    
+    public boolean isTaskToExecute(){
+    	return andTask || orTask;
     }
     
 }

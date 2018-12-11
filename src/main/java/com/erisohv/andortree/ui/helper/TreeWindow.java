@@ -18,8 +18,7 @@ import javax.swing.WindowConstants;
  */
 public class TreeWindow extends JFrame{
     JButton refresh = new JButton("Refresh Tree");
-    JLabel info = new JLabel("Press \"Refresh Tree\" to view the "
-            + "tasks performed recently");
+    JLabel info = new JLabel("Press \"Refresh Tree\" to view the tasks performed recently");
     TreeCanvas canvas;
     JScrollPane scroll;
 

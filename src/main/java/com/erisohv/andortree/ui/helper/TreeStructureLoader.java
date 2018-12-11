@@ -5,8 +5,9 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import main.java.com.erisohv.andortree.tree.AndOrTree;
 import main.java.com.erisohv.andortree.tree.Tree;
@@ -20,6 +21,8 @@ public class TreeStructureLoader{
     private AndOrTree tree = new AndOrTree();
     private LinkedList<String> atomicTasks = new LinkedList<>();
     private int atomicMinimun;
+    
+    private static final Logger logger = LogManager.getLogger(TreeStructureLoader.class);
     
     public boolean readTree(BufferedReader input) {
         treeStructure = new LinkedList<>();
@@ -35,8 +38,7 @@ public class TreeStructureLoader{
             return true;
             
         } catch (IOException ex) {
-            Logger.getLogger(TreeStructureLoader.class.getName())
-                    .log(Level.SEVERE, null, ex);
+        	logger.error("", ex);
         }
         return false;
     }
