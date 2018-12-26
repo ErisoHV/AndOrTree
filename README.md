@@ -15,12 +15,3 @@ AND-OR Tree example:
 <img src="src/test/java/com/erisohv/andortree/resources/images/01.PNG?raw=true" height="250" >
 
 The project was developed with a java swing interface.
-
-Java classes:
-
-1. `Tree.java` A simple Tree structure, with inorder, postorder and preorder traversal.
-2. `AndOrTree.java` extends tree and contains the AND-OR Tree structure. The node content is a String. 
-3. `TreeStructureLoader.java` contains the AND-OR Tree uploaded from a file text through a levels route by **parenthetical notation**. This class is the intermediary between the AND-OR tree and the interface.
-4. `TreeWindow.java` is a `JFrame` that contains the canvas where the tree is drawn
-5. `TreeCanvas.java` is the canvas where the tree is drawn, is a JPanel. AND tasks are represented by an oval, the OR tasks are represented with a rectangle
-6. `UIInterface.java` the interface...  
